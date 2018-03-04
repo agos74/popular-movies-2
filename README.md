@@ -1,4 +1,4 @@
-# popular-movies
+# popular-movies-2
 Popular Movies, Stage 2
 
 App for Udacity Android Developer Nanodegree Course.
