@@ -1,7 +1,5 @@
 package com.udacity.popularmovies.utilities;
 
-import android.content.Context;
-import android.util.Log;
 
 import com.udacity.popularmovies.model.Movie;
 
@@ -13,7 +11,7 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
+/*
  * Created by Agostino on 22/02/2018.
  */
 
@@ -21,7 +19,7 @@ public class TheMovieDBJsonUtils {
 
     public static final String TMDB_POSTER_PATH = "http://image.tmdb.org/t/p/";
     public static final String TMDB_POSTER_WIDTH_MEDIUM = "w185/";
-    public static final String TMDB_POSTER_WIDTH_LARGE = "w342/";
+    //public static final String TMDB_POSTER_WIDTH_LARGE = "w342/";
 
     public static List<Movie> parseMoviesJson(String moviesJsonStr) throws JSONException {
 

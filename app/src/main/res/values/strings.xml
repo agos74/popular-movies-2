@@ -10,11 +10,11 @@
     <string name="action_sort_order_rated">Highest Rated</string>
 
     <!-- Detail Activity-->
-    <string name="detail_title_label">Title</string>
+    <!--<string name="detail_title_label">Title</string>-->
     <string name="detail_original_title_label">Original title</string>
     <string name="detail_release_date_label">Release date</string>
     <string name="detail_rating_label">Rating</string>
-    <string name="detail_plot_synopsis_label">Plot synopsis</string>
+    <!--<string name="detail_plot_synopsis_label">Plot synopsis</string>-->
 
     <!-- Content descriptions-->
     <string name="movie_poster_content_description">Movie Poster picture</string>

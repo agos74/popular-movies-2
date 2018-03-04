@@ -15,7 +15,7 @@ import com.udacity.popularmovies.utilities.TheMovieDBJsonUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
+/*
  * Created by Agostino on 21/02/2018.
  */
 
@@ -83,9 +83,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         Context context = parent.getContext();
         int layoutIdForListItem = R.layout.movie_grid_item;
         LayoutInflater inflater = LayoutInflater.from(context);
-        boolean shouldAttachToParentImmediately = false;
 
-        View view = inflater.inflate(layoutIdForListItem, parent, shouldAttachToParentImmediately);
+        View view = inflater.inflate(layoutIdForListItem, parent, false);
         return new MovieAdapterViewHolder(view);
     }
 

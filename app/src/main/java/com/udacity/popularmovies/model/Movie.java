@@ -3,7 +3,7 @@ package com.udacity.popularmovies.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
+/*
  * Created by Agostino on 22/02/2018.
  */
 
@@ -16,16 +16,6 @@ public class Movie implements Parcelable {
     private String plotSynopsis;
     private String rating;
     private String releaseDate;
-
-    public Movie(String id, String title, String originalTitle, String poster, String plotSynopsis, String rating, String releaseDate) {
-        this.id = id;
-        this.title = title;
-        this.originalTitle = originalTitle;
-        this.poster = poster;
-        this.plotSynopsis = plotSynopsis;
-        this.rating = rating;
-        this.releaseDate = releaseDate;
-    }
 
     private Movie(Parcel in) {
         id = in.readString();
@@ -51,14 +41,6 @@ public class Movie implements Parcelable {
 
     public Movie() {
 
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getTitle() {

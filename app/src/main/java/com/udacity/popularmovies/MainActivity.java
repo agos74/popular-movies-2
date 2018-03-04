@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
     private static final String ORDER_TYPE_TEXT_KEY = "order_type";
 
-    private String mOrderType = MOST_POPULAR_ORDER_KEY;
+    private static String mOrderType = MOST_POPULAR_ORDER_KEY;
 
     private static final int MOVIES_LOADER_ID = 0;
 
@@ -160,55 +160,59 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     @Override
     public Loader<List<Movie>> onCreateLoader(int id, Bundle args) {
 
-        return new AsyncTaskLoader<List<Movie>>(this) {
+        mLoadingIndicator.setVisibility(View.VISIBLE);
 
-            List<Movie> mMoviesList = null;
+        return new MyAsyncTaskLoader(this);
+    }
 
-            @Override
-            protected void onStartLoading() {
-                if (mMoviesList != null) {
-                    deliverResult(mMoviesList);
-                } else {
-                    mLoadingIndicator.setVisibility(View.VISIBLE);
-                    forceLoad();
-                }
+    private static class MyAsyncTaskLoader extends AsyncTaskLoader<List<Movie>> {
 
+        List<Movie> mMoviesList = null;
+
+        public MyAsyncTaskLoader(Context context) {
+            super(context);
+        }
+
+        @Override
+        protected void onStartLoading() {
+            if (mMoviesList != null) {
+                deliverResult(mMoviesList);
+            } else {
+                forceLoad();
             }
 
-            @Override
-            public List<Movie> loadInBackground() {
+        }
 
-                String orderType = mOrderType;
-                URL moviesRequestUrl = NetworkUtils.buildUrl(orderType);
+        @Override
+        public List<Movie> loadInBackground() {
 
-                try {
-                    String jsonMoviesResponse = NetworkUtils
-                            .getResponseFromHttpUrl(moviesRequestUrl);
+            String orderType = mOrderType;
+            URL moviesRequestUrl = NetworkUtils.buildUrl(orderType);
 
-                    List<Movie> moviesList = TheMovieDBJsonUtils.parseMoviesJson(jsonMoviesResponse);
+            try {
+                String jsonMoviesResponse = NetworkUtils
+                        .getResponseFromHttpUrl(moviesRequestUrl);
 
-                    return moviesList;
+                return TheMovieDBJsonUtils.parseMoviesJson(jsonMoviesResponse);
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return null;
-                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
             }
+        }
 
-            /**
-             * Sends the result of the load to the registered listener.
-             *
-             * @param moviesList The result of the load
-             */
-            public void deliverResult(List<Movie> moviesList) {
-                mMoviesList = moviesList;
-                super.deliverResult(moviesList);
-            }
-
-        };
-
+        /**
+         * Sends the result of the load to the registered listener.
+         *
+         * @param moviesList The result of the load
+         */
+        public void deliverResult(List<Movie> moviesList) {
+            mMoviesList = moviesList;
+            super.deliverResult(moviesList);
+        }
 
     }
+
 
     @Override
     public void onLoadFinished(Loader<List<Movie>> loader, List<Movie> moviesList) {

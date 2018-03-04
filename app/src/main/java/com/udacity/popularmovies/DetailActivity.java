@@ -27,7 +27,7 @@ public class DetailActivity extends AppCompatActivity {
             closeOnError();
         }
 
-        Movie movie = intent.getParcelableExtra("Movie");
+        Movie movie = intent != null ? (Movie) intent.getParcelableExtra("Movie") : null;
 
         if (movie == null) {
             // Movie data not found in intent

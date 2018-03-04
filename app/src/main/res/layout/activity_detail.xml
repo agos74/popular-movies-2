@@ -11,8 +11,10 @@
         android:layout_height="wrap_content"
         android:background="@color/colorAccent"
         android:gravity="center"
-        android:paddingVertical="15dp"
-        android:paddingHorizontal="20dp"
+        android:paddingBottom="15dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="15dp"
         android:text="Maze Runner: The Scorch Trials"
         android:textSize="25sp" />
 
@@ -26,7 +28,7 @@
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="10dp"
             tools:context="com.udacity.popularmovies.DetailActivity">
@@ -37,7 +39,7 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-                <ImageView
+                <com.inthecheesefactory.thecheeselibrary.widget.AdjustableImageView
                     android:id="@+id/poster_iv"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
@@ -48,7 +50,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingLeft="@dimen/activity_horizontal_margin">
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingRight="@dimen/activity_horizontal_margin"
+                    android:paddingStart="@dimen/activity_horizontal_margin">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -118,7 +122,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/layout_first_row"
                 android:paddingTop="@dimen/activity_vertical_margin"
-                android:text="Descrizione"
+                android:text="Description"
                 android:textSize="16sp" />
 
         </RelativeLayout>
