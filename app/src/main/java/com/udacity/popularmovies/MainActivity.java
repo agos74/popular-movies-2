@@ -25,6 +25,9 @@ import com.udacity.popularmovies.utilities.TheMovieDBJsonUtils;
 import java.net.URL;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity implements MovieAdapter.MovieAdapterOnClickHandler, LoaderManager.LoaderCallbacks<List<Movie>> {
 
     public static final String MOST_POPULAR_ORDER_KEY = "p";
@@ -33,13 +36,23 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     private static final String MOST_POPULAR_TITLE = "Most Popular Movies";
     private static final String TOP_RATED_TITLE = "Highest Rated Movies";
 
-    private RecyclerView mRecyclerView;
+    //ButterKnife Binding
+    @BindView(R.id.recyclerview_main)
+    RecyclerView mRecyclerView;
+    /* This Layout with TextView and Button is used to display errors and will be hidden if there are no errors */
+    @BindView(R.id.layout_error)
+    LinearLayout mErrorLayout;
+    /*
+     * The ProgressBar that will indicate to the user that we are loading data. It will be
+     * hidden when no data is loading.
+     */
+    @BindView(R.id.pb_loading_indicator)
+    ProgressBar mLoadingIndicator;
+    @BindView(R.id.retry_button)
+    Button mRetryButton;
+
 
     private MovieAdapter mMovieAdapter;
-
-    private LinearLayout mErrorLayout;
-
-    private ProgressBar mLoadingIndicator;
 
     private static final String ORDER_TYPE_TEXT_KEY = "order_type";
 
@@ -52,16 +65,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_posters);
 
-        mRecyclerView = findViewById(R.id.recyclerview_main);
+        ButterKnife.bind(this);
 
-        /* This Layout with TextView and Button is used to display errors and will be hidden if there are no errors */
-        mErrorLayout = findViewById(R.id.layout_error);
-
-        /*
-         * The ProgressBar that will indicate to the user that we are loading data. It will be
-         * hidden when no data is loading.
-         */
-        mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
 
         /*
          * GridLayoutManager to show the movie posters
@@ -104,8 +109,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
             }
         }
 
-        final Button button = findViewById(R.id.retry_button);
-        button.setOnClickListener(new View.OnClickListener() {
+        mRetryButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, null, MainActivity.this);
             }

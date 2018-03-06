@@ -15,12 +15,31 @@ import com.squareup.picasso.Picasso;
 import com.udacity.popularmovies.model.Movie;
 import com.udacity.popularmovies.utilities.TheMovieDBJsonUtils;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class DetailActivity extends AppCompatActivity {
+
+    //ButterKnife Binding
+    @BindView(R.id.poster_iv)
+    ImageView mPosterIv;
+    @BindView(R.id.title_tv)
+    TextView mTitleTv;
+    @BindView(R.id.original_title_tv)
+    TextView mOriginalTitleTv;
+    @BindView(R.id.release_date_tv)
+    TextView mReleaseDateTv;
+    @BindView(R.id.rating_tv)
+    TextView mRatingTv;
+    @BindView(R.id.plot_synopsis_tv)
+    TextView mPlotSynopsisTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
+        ButterKnife.bind(this);
 
         Intent intent = getIntent();
         if (intent == null) {
@@ -48,20 +67,13 @@ public class DetailActivity extends AppCompatActivity {
 
     private void populateUI(Movie movie) {
 
-        ImageView mPosterIv = findViewById(R.id.poster_iv);
-        TextView mTitleTv = findViewById(R.id.title_tv);
-        TextView mOriginalTitleTv = findViewById(R.id.original_title_tv);
-        TextView mReleaseDateTv = findViewById(R.id.release_date_tv);
-        TextView mRatingTv = findViewById(R.id.rating_tv);
-        TextView mPlotSynopsisTv = findViewById(R.id.plot_synopsis_tv);
-
         //display Movie detail data
         Uri imgUri = Uri.parse(TheMovieDBJsonUtils.TMDB_POSTER_PATH).buildUpon()
                 .appendEncodedPath(TheMovieDBJsonUtils.TMDB_POSTER_WIDTH_MEDIUM)
                 .appendEncodedPath(movie.getPoster())
                 .build();
 
-        Picasso.with(mPosterIv.getContext()).load(imgUri).into(mPosterIv);
+        Picasso.with(mPosterIv.getContext()).load(imgUri).error(R.mipmap.ic_launcher).into(mPosterIv);
         mPosterIv.setContentDescription(movie.getTitle());
 
         mTitleTv.setText(movie.getTitle());

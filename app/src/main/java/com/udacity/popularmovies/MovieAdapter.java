@@ -15,6 +15,9 @@ import com.udacity.popularmovies.utilities.TheMovieDBJsonUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /*
  * Created by Agostino on 21/02/2018.
  */
@@ -51,11 +54,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
      * Cache of the children views for a movie grid item.
      */
     public class MovieAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public final ImageView mMovieImageView;
+        @BindView(R.id.iv_movie)
+        ImageView mMovieImageView;
 
         public MovieAdapterViewHolder(View view) {
             super(view);
-            mMovieImageView = view.findViewById(R.id.iv_movie);
+            ButterKnife.bind(this, view);
             view.setOnClickListener(this);
         }
 
