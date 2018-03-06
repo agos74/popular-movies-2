@@ -12,7 +12,7 @@
     <style name="DetailLabelStyle">
         <item name="android:textStyle">bold</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">@dimen/detail_label_width</item>
+        <item name="android:layout_width">@dimen/detail_label_width_landscape</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 

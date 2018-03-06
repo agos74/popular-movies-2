@@ -11,12 +11,12 @@
         android:layout_height="wrap_content"
         android:background="@color/colorAccent"
         android:gravity="center"
-        android:paddingBottom="15dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:paddingTop="15dp"
-        android:text="Maze Runner: The Scorch Trials"
-        android:textSize="25sp" />
+        android:paddingBottom="@dimen/padding_large"
+        android:paddingLeft="@dimen/padding_large"
+        android:paddingRight="@dimen/padding_large"
+        android:paddingTop="@dimen/padding_large"
+        android:text="@string/activity_movie_title_text"
+        android:textSize="@dimen/text_sz_extra_large" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -31,11 +31,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="10dp">
+            android:padding="@dimen/padding_medium">
 
             <com.inthecheesefactory.thecheeselibrary.widget.AdjustableImageView
                 android:id="@+id/poster_iv"
-                android:layout_width="200dp"
+                android:layout_width="@dimen/poster_width_landscape"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/movie_poster_content_description" />
@@ -44,9 +44,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingStart="@dimen/activity_horizontal_margin">
+                android:paddingLeft="@dimen/padding_large"
+                android:paddingRight="@dimen/padding_large"
+                android:paddingStart="@dimen/padding_large">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -56,14 +56,13 @@
                     <TextView
                         android:id="@+id/original_title_label"
                         style="@style/DetailLabelStyle"
-                        android:layout_width="110dp"
                         android:text="@string/detail_original_title_label" />
 
                     <TextView
                         android:id="@+id/original_title_tv"
                         style="@style/DetailTextStyle"
                         android:layout_below="@id/original_title_label"
-                        android:text="Original Title" />
+                        android:text="@string/activity_movie_title_text" />
 
                 </RelativeLayout>
 
@@ -76,19 +75,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:paddingTop="@dimen/activity_vertical_margin">
+                        android:paddingTop="@dimen/padding_large">
 
                         <TextView
                             android:id="@+id/release_date_label"
                             style="@style/DetailLabelStyle"
-                            android:layout_width="150dp"
                             android:text="@string/detail_release_date_label" />
 
                         <TextView
                             android:id="@+id/release_date_tv"
                             style="@style/DetailTextStyle"
                             android:layout_below="@id/release_date_label"
-                            android:text="2015-02-12" />
+                            android:text="@string/activity_movie_release_date_text" />
 
                     </RelativeLayout>
 
@@ -96,19 +94,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:paddingTop="@dimen/activity_vertical_margin">
+                        android:paddingTop="@dimen/padding_large">
 
                         <TextView
                             android:id="@+id/rating_label"
                             style="@style/DetailLabelStyle"
-                            android:layout_width="110dp"
                             android:text="@string/detail_rating_label" />
 
                         <TextView
                             android:id="@+id/rating_tv"
                             style="@style/DetailTextStyle"
                             android:layout_below="@id/rating_label"
-                            android:text="6.1/10" />
+                            android:text="@string/activity_movie_rating_text" />
                     </RelativeLayout>
                 </LinearLayout>
 
@@ -116,9 +113,9 @@
                     android:id="@+id/plot_synopsis_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/activity_vertical_margin"
-                    android:text="Description"
-                    android:textSize="16sp" />
+                    android:paddingTop="@dimen/padding_large"
+                    android:text="@string/activity_movie_plot_synopsis_text"
+                    android:textSize="@dimen/text_sz_medium" />
 
             </LinearLayout>
 

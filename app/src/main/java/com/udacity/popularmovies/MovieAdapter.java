@@ -103,7 +103,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
                 .appendEncodedPath(movieForThisPosition.getPoster())
                 .build();
 
-        Picasso.with(holder.mMovieImageView.getContext()).load(imgUri).into(holder.mMovieImageView);
+        Picasso
+                .with(holder.mMovieImageView.getContext())
+                .load(imgUri)
+                .error(R.mipmap.ic_launcher)
+//                .placeholder(R.drawable.progress_animation)
+                .into(holder.mMovieImageView);
 
         holder.mMovieImageView.setContentDescription(movieForThisPosition.getTitle());
     }
