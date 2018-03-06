@@ -2,7 +2,6 @@ package com.udacity.popularmovies;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -10,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -63,15 +63,22 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
          */
         mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
 
-         /*
+        /*
+         * GridLayoutManager to show the movie posters
+         */
+        GridLayoutManager layoutManager = new GridLayoutManager(this, numberOfColumns());
+
+        /*
          * GridLayoutManager to show the movie posters in grid of 2 or 4 columns
          */
-        GridLayoutManager layoutManager;
+/*
         if (super.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             layoutManager = new GridLayoutManager(this, 2);
         } else {
             layoutManager = new GridLayoutManager(this, 4);
         }
+*/
+
 
         /* Set the layoutManager on mRecyclerView */
         mRecyclerView.setLayoutManager(layoutManager);
@@ -259,6 +266,21 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         }
         this.setTitle(title);
 
+    }
+
+    /**
+     * This method dynamically calculate the number of columns and the layout would adapt to the screen size and orientation
+     */
+    private int numberOfColumns() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        // You can change this divider to adjust the size of the poster
+//        int widthDivider = 400;
+        int widthDivider = 300;
+        int width = displayMetrics.widthPixels;
+        int nColumns = width / widthDivider;
+        if (nColumns < 2) return 2;
+        return nColumns;
     }
 
 
