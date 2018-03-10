@@ -54,16 +54,16 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
     private MovieAdapter mMovieAdapter;
 
-    private static final String ORDER_TYPE_TEXT_KEY = "order_type";
+    private static final String SORTING_TYPE_TEXT_KEY = "sorting_type";
 
-    private static String mOrderType = MOST_POPULAR_ORDER_KEY;
+    private static String mSortingType = MOST_POPULAR_ORDER_KEY;
 
     private static final int MOVIES_LOADER_ID = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_posters);
+        setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
 
@@ -101,11 +101,11 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         mRecyclerView.setAdapter(mMovieAdapter);
 
 
-        //If savedInstanceState is not null and contains ORDER_TYPE_TEXT_KEY, set mOrderType with the value
+        //If savedInstanceState is not null and contains SORTING_TYPE_TEXT_KEY, set mSortingType with the value
         if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey(ORDER_TYPE_TEXT_KEY)) {
-                mOrderType = savedInstanceState
-                        .getString(ORDER_TYPE_TEXT_KEY);
+            if (savedInstanceState.containsKey(SORTING_TYPE_TEXT_KEY)) {
+                mSortingType = savedInstanceState
+                        .getString(SORTING_TYPE_TEXT_KEY);
             }
         }
 
@@ -197,8 +197,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         @Override
         public List<Movie> loadInBackground() {
 
-            String orderType = mOrderType;
-            URL moviesRequestUrl = NetworkUtils.buildUrl(orderType);
+            String orderType = mSortingType;
+            URL moviesRequestUrl = NetworkUtils.buildUrlWithSortingType(orderType);
 
             try {
                 String jsonMoviesResponse = NetworkUtils
@@ -258,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
         //Set Activity Title
         String title;
-        switch (mOrderType) {
+        switch (mSortingType) {
             case MainActivity.MOST_POPULAR_ORDER_KEY:
                 title = MOST_POPULAR_TITLE;
                 break;
@@ -292,7 +292,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         //Put the order type in the outState bundle
-        outState.putString(ORDER_TYPE_TEXT_KEY, mOrderType);
+        outState.putString(SORTING_TYPE_TEXT_KEY, mSortingType);
 
     }
 
@@ -312,10 +312,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
         switch (id) {
             case R.id.action_sort_order_popular:
-                mOrderType = MOST_POPULAR_ORDER_KEY;
+                mSortingType = MOST_POPULAR_ORDER_KEY;
                 break;
             case R.id.action_sort_order_rated:
-                mOrderType = TOP_RATED_ORDER_KEY;
+                mSortingType = TOP_RATED_ORDER_KEY;
                 break;
             default:
                 return super.onOptionsItemSelected(item);

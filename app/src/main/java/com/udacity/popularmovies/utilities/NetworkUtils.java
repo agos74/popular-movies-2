@@ -25,23 +25,27 @@ public class NetworkUtils {
 
     private static final String THEMOVIEDB_BASE_URL = "http://api.themoviedb.org/3/movie";
 
-    /* The sort type we want our API to return */
-    private static final String POPULAR_ENDPOINT = "popular";
-    private static final String TOP_RATED_ENDPOINT = "top_rated";
-
     private static final String PARAM_API_KEY = "api_key";
 
     private static final String THEMOVIEDB_API_KEY = BuildConfig.API_KEY;
 
+    /* The sort type we want our API to return */
+    private static final String POPULAR_ENDPOINT = "popular";
+    private static final String TOP_RATED_ENDPOINT = "top_rated";
+
+    private static final String VIDEOS_ENDPOINT = "videos";
+    private static final String REVIEW_ENDPOINT = "reviews";
+
+
     /**
      * Builds the URL used to query TheMovieDB.
      *
-     * @param sortType The keyword that will be queried for.
+     * @param sortingType The keyword that will be queried for.
      * @return The URL to use to query TheMovieDB server.
      */
-    public static URL buildUrl(String sortType) {
+    public static URL buildUrlWithSortingType(String sortingType) {
         String endPoint;
-        switch (sortType) {
+        switch (sortingType) {
             case MainActivity.MOST_POPULAR_ORDER_KEY:
                 endPoint = POPULAR_ENDPOINT;
                 break;
@@ -65,6 +69,31 @@ public class NetworkUtils {
 
         return url;
     }
+
+    /**
+     * Builds the URL used to query TheMovieDB.
+     *
+     * @param movieId  The movieId that will be queried for.
+     * @param endPoint The results type (videos or reviews).
+     * @return The URL to use to query TheMovieDB server.
+     */
+    public static URL buildUrlWithMovieId(String movieId, String endPoint) {
+        Uri builtUri = Uri.parse(THEMOVIEDB_BASE_URL).buildUpon()
+                .appendEncodedPath(movieId)
+                .appendEncodedPath(endPoint)
+                .appendQueryParameter(PARAM_API_KEY, THEMOVIEDB_API_KEY)
+                .build();
+
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return url;
+    }
+
 
     /**
      * This method returns the entire result from the HTTP response.

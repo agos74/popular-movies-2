@@ -17,9 +17,9 @@ import java.util.List;
 
 public class TheMovieDBJsonUtils {
 
-    public static final String TMDB_POSTER_PATH = "http://image.tmdb.org/t/p/";
-    public static final String TMDB_POSTER_WIDTH_MEDIUM = "w185/";
-    //public static final String TMDB_POSTER_WIDTH_LARGE = "w342/";
+    public static final String TMDB_IMAGE_PATH = "http://image.tmdb.org/t/p/";
+    public static final String TMDB_IMAGE_WIDTH_MEDIUM = "w185/";
+    public static final String TMDB_IMAGE_WIDTH_LARGE = "w342/";
 
     public static List<Movie> parseMoviesJson(String moviesJsonStr) throws JSONException {
 
@@ -28,11 +28,12 @@ public class TheMovieDBJsonUtils {
         final String TMDB_RESULTS = "results";
 
         final String TMDB_ID = "id";
-        final String TMDB_TITLE = "title";
-        final String TMDB_ORIGINAL_TITLE = "original_title";
-        final String TMDB_POSTER = "poster_path";
-        final String TMDB_PLOT_SYNOPSIS = "overview";
         final String TMDB_RATING = "vote_average";
+        final String TMDB_TITLE = "title";
+        final String TMDB_POSTER = "poster_path";
+        final String TMDB_ORIGINAL_TITLE = "original_title";
+        final String TMDB_BACKDROP = "backdrop_path";
+        final String TMDB_PLOT_SYNOPSIS = "overview";
         final String TMDB_RELEASE_DATE = "release_date";
 
         //error message code
@@ -75,24 +76,28 @@ public class TheMovieDBJsonUtils {
                 movie.setTitle(movieJson.optString(TMDB_ID));
             }
 
-            if (movieJson.has(TMDB_TITLE)) {
-                movie.setTitle(movieJson.optString(TMDB_TITLE));
+            if (movieJson.has(TMDB_RATING)) {
+                movie.setRating(movieJson.getString(TMDB_RATING));
             }
 
-            if (movieJson.has(TMDB_ORIGINAL_TITLE)) {
-                movie.setOriginalTitle(movieJson.optString(TMDB_ORIGINAL_TITLE));
+            if (movieJson.has(TMDB_TITLE)) {
+                movie.setTitle(movieJson.optString(TMDB_TITLE));
             }
 
             if (movieJson.has(TMDB_POSTER)) {
                 movie.setPoster(movieJson.optString(TMDB_POSTER));
             }
 
-            if (movieJson.has(TMDB_PLOT_SYNOPSIS)) {
-                movie.setPlotSynopsis(movieJson.optString(TMDB_PLOT_SYNOPSIS));
+            if (movieJson.has(TMDB_ORIGINAL_TITLE)) {
+                movie.setOriginalTitle(movieJson.optString(TMDB_ORIGINAL_TITLE));
             }
 
-            if (movieJson.has(TMDB_RATING)) {
-                movie.setRating(movieJson.getString(TMDB_RATING));
+            if (movieJson.has(TMDB_BACKDROP)) {
+                movie.setBackdrop(movieJson.optString(TMDB_BACKDROP));
+            }
+
+            if (movieJson.has(TMDB_PLOT_SYNOPSIS)) {
+                movie.setPlotSynopsis(movieJson.optString(TMDB_PLOT_SYNOPSIS));
             }
 
             if (movieJson.has(TMDB_RELEASE_DATE)) {

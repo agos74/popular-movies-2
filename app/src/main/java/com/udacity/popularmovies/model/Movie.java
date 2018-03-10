@@ -10,20 +10,22 @@ import android.os.Parcelable;
 public class Movie implements Parcelable {
 
     private String id;
-    private String title;
-    private String originalTitle;
-    private String poster;
-    private String plotSynopsis;
     private String rating;
+    private String title;
+    private String poster;
+    private String originalTitle;
+    private String backdrop;
+    private String plotSynopsis;
     private String releaseDate;
 
     private Movie(Parcel in) {
         id = in.readString();
-        title = in.readString();
-        originalTitle = in.readString();
-        poster = in.readString();
-        plotSynopsis = in.readString();
         rating = in.readString();
+        title = in.readString();
+        poster = in.readString();
+        originalTitle = in.readString();
+        backdrop = in.readString();
+        plotSynopsis = in.readString();
         releaseDate = in.readString();
     }
 
@@ -91,15 +93,24 @@ public class Movie implements Parcelable {
         this.releaseDate = releaseDate;
     }
 
+    public String getBackdrop() {
+        return backdrop;
+    }
+
+    public void setBackdrop(String backdrop) {
+        this.backdrop = backdrop;
+    }
+
     @Override //for debug purpose
     public String toString() {
         return "Movie{" +
                 "id='" + title + '\'' +
-                ", title='" + title + '\'' +
-                ", originalTitle='" + originalTitle + '\'' +
-                ", poster='" + poster + '\'' +
-                ", plotSynopsis='" + plotSynopsis + '\'' +
                 ", rating='" + rating + '\'' +
+                ", title='" + title + '\'' +
+                ", poster='" + poster + '\'' +
+                ", originalTitle='" + originalTitle + '\'' +
+                ", backdrop='" + backdrop + '\'' +
+                ", plotSynopsis='" + plotSynopsis + '\'' +
                 ", releaseDate='" + releaseDate + '\'' +
                 '}';
     }
@@ -112,11 +123,12 @@ public class Movie implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
-        dest.writeString(title);
-        dest.writeString(originalTitle);
-        dest.writeString(poster);
-        dest.writeString(plotSynopsis);
         dest.writeString(rating);
+        dest.writeString(title);
+        dest.writeString(poster);
+        dest.writeString(originalTitle);
+        dest.writeString(backdrop);
+        dest.writeString(plotSynopsis);
         dest.writeString(releaseDate);
     }
 }
