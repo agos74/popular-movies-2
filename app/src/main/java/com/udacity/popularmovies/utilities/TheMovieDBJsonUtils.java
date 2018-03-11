@@ -19,7 +19,7 @@ public class TheMovieDBJsonUtils {
 
     public static final String TMDB_IMAGE_PATH = "http://image.tmdb.org/t/p/";
     public static final String TMDB_IMAGE_WIDTH_MEDIUM = "w185/";
-    public static final String TMDB_IMAGE_WIDTH_LARGE = "w342/";
+    public static final String TMDB_IMAGE_WIDTH_LARGE = "w500/";
 
     public static List<Movie> parseMoviesJson(String moviesJsonStr) throws JSONException {
 

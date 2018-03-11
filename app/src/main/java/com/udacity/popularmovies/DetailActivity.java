@@ -33,8 +33,8 @@ public class DetailActivity extends AppCompatActivity {
     ImageView mBackdropIv;
     @BindView(R.id.poster_iv)
     ImageView mPosterIv;
-    @BindView(R.id.title_tv)
-    TextView mTitleTv;
+    //    @BindView(R.id.title_tv)
+//    TextView mTitleTv;
     @BindView(R.id.original_title_tv)
     TextView mOriginalTitleTv;
     @BindView(R.id.release_date_tv)
@@ -64,8 +64,10 @@ public class DetailActivity extends AppCompatActivity {
             return;
         }
 
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            setSupportActionBar(mToolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         populateUI(movie);
 
@@ -93,7 +95,7 @@ public class DetailActivity extends AppCompatActivity {
         Picasso.with(mPosterIv.getContext()).load(posterUri).error(R.mipmap.ic_launcher).into(mPosterIv);
         mPosterIv.setContentDescription(movie.getTitle());
 
-        mTitleTv.setText(movie.getTitle());
+//        mTitleTv.setText(movie.getTitle());
         mOriginalTitleTv.setText(movie.getOriginalTitle());
         mReleaseDateTv.setText(movie.getReleaseDate());
         String rating = movie.getRating().concat("/10");

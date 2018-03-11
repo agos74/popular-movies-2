@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.udacity.popularmovies.model.Movie;
+import com.udacity.popularmovies.utilities.GridSpacingItemDecoration;
 import com.udacity.popularmovies.utilities.NetworkUtils;
 import com.udacity.popularmovies.utilities.TheMovieDBJsonUtils;
 
@@ -39,9 +40,11 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     //ButterKnife Binding
     @BindView(R.id.recyclerview_main)
     RecyclerView mRecyclerView;
+
     /* This Layout with TextView and Button is used to display errors and will be hidden if there are no errors */
     @BindView(R.id.layout_error)
     LinearLayout mErrorLayout;
+
     /*
      * The ProgressBar that will indicate to the user that we are loading data. It will be
      * hidden when no data is loading.
@@ -73,20 +76,12 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
          */
         GridLayoutManager layoutManager = new GridLayoutManager(this, numberOfColumns());
 
-        /*
-         * GridLayoutManager to show the movie posters in grid of 2 or 4 columns
-         */
-/*
-        if (super.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            layoutManager = new GridLayoutManager(this, 2);
-        } else {
-            layoutManager = new GridLayoutManager(this, 4);
-        }
-*/
-
-
         /* Set the layoutManager on mRecyclerView */
         mRecyclerView.setLayoutManager(layoutManager);
+
+        /* Add column spacing */
+        int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.grid_layout_margin);
+        mRecyclerView.addItemDecoration(new GridSpacingItemDecoration(2, spacingInPixels, false, 0));
 
          /*
          * Use this setting to improve performance if you know that changes in content do not

@@ -4,6 +4,7 @@
     <dimen name="margin_small">4dp</dimen>
     <dimen name="margin_medium">8dp</dimen>
     <dimen name="margin_large">12dp</dimen>
+    <dimen name="margin_extra_large">24dp</dimen>
 
     <dimen name="text_sz_extra_small">12sp</dimen>
     <dimen name="text_sz_small">14sp</dimen>
@@ -16,12 +17,10 @@
     <dimen name="padding_extra_large">20dp</dimen>
 
     <dimen name="progress_bar_dimens">42dp</dimen>
-    <dimen name="detail_label_width">110dp</dimen>
-    <dimen name="detail_label_width_landscape">150dp</dimen>
-    <dimen name="poster_width_portrait">150dp</dimen>
-    <dimen name="poster_width_landscape">200dp</dimen>
 
-    <dimen name="detail_backdrop_height">256dp</dimen>
+    <dimen name="grid_layout_margin">6dp</dimen>
+
+    <dimen name="view_overlay_layout_height">64dp</dimen>
 
 
 </resources>
