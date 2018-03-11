@@ -1,16 +1,20 @@
 package com.udacity.popularmovies;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.elmargomez.typer.Font;
+import com.elmargomez.typer.Typer;
 import com.squareup.picasso.Picasso;
 import com.udacity.popularmovies.model.Movie;
 import com.udacity.popularmovies.utilities.TheMovieDBJsonUtils;
@@ -21,6 +25,12 @@ import butterknife.ButterKnife;
 public class DetailActivity extends AppCompatActivity {
 
     //ButterKnife Binding
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
+    @BindView(R.id.collapsing_toolbar)
+    CollapsingToolbarLayout mCollapsingToolbar;
+    @BindView(R.id.backdrop_iv)
+    ImageView mBackdropIv;
     @BindView(R.id.poster_iv)
     ImageView mPosterIv;
     @BindView(R.id.title_tv)
@@ -54,20 +64,28 @@ public class DetailActivity extends AppCompatActivity {
             return;
         }
 
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         populateUI(movie);
-
-        ActionBar actionBar = this.getSupportActionBar();
-
-        // Set the action bar back button to look like an up button
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
 
     }
 
     private void populateUI(Movie movie) {
 
+        mCollapsingToolbar.setTitle(movie.getTitle());
+
+        Typeface font = Typer.set(this).getFont(Font.ROBOTO_MEDIUM);
+        mCollapsingToolbar.setExpandedTitleTypeface(font);
+
         //display Movie detail data
+        Uri backdropUri = Uri.parse(TheMovieDBJsonUtils.TMDB_IMAGE_PATH).buildUpon()
+                .appendEncodedPath(TheMovieDBJsonUtils.TMDB_IMAGE_WIDTH_LARGE)
+                .appendEncodedPath(movie.getBackdrop())
+                .build();
+        Picasso.with(mBackdropIv.getContext()).load(backdropUri).error(R.mipmap.ic_launcher).into(mBackdropIv);
+        mBackdropIv.setContentDescription(movie.getTitle());
+
         Uri posterUri = Uri.parse(TheMovieDBJsonUtils.TMDB_IMAGE_PATH).buildUpon()
                 .appendEncodedPath(TheMovieDBJsonUtils.TMDB_IMAGE_WIDTH_MEDIUM)
                 .appendEncodedPath(movie.getPoster())

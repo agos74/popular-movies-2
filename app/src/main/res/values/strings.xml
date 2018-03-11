@@ -18,6 +18,7 @@
 
     <!-- Content descriptions-->
     <string name="movie_poster_content_description">Movie poster picture</string>
+    <string name="movie_backdrop_content_description">Movie backdrop picture</string>
 
     <!-- Button title  -->
     <string name="retry">Retry</string>
