@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -44,6 +46,7 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.plot_synopsis_tv)
     TextView mPlotSynopsisTv;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,14 +67,23 @@ public class DetailActivity extends AppCompatActivity {
             return;
         }
 
-        if (getSupportActionBar() != null) {
-            setSupportActionBar(mToolbar);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         populateUI(movie);
 
+        //load trailers fragment
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment fragment = fm.findFragmentById(R.id.fragmentContainer);
+        if (fragment == null) {
+            fragment = new TrailerListFragment();
+            fm.beginTransaction()
+                    .add(R.id.fragmentContainer, fragment)
+                    .commit();
+        }
+
     }
+
 
     private void populateUI(Movie movie) {
 
@@ -86,14 +98,12 @@ public class DetailActivity extends AppCompatActivity {
                 .appendEncodedPath(movie.getBackdrop())
                 .build();
         Picasso.with(mBackdropIv.getContext()).load(backdropUri).error(R.mipmap.ic_launcher).into(mBackdropIv);
-        mBackdropIv.setContentDescription(movie.getTitle());
 
         Uri posterUri = Uri.parse(TheMovieDBJsonUtils.TMDB_IMAGE_PATH).buildUpon()
                 .appendEncodedPath(TheMovieDBJsonUtils.TMDB_IMAGE_WIDTH_MEDIUM)
                 .appendEncodedPath(movie.getPoster())
                 .build();
         Picasso.with(mPosterIv.getContext()).load(posterUri).error(R.mipmap.ic_launcher).into(mPosterIv);
-        mPosterIv.setContentDescription(movie.getTitle());
 
 //        mTitleTv.setText(movie.getTitle());
         mOriginalTitleTv.setText(movie.getOriginalTitle());

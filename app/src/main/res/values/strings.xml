@@ -19,6 +19,7 @@
     <!-- Content descriptions-->
     <string name="movie_poster_content_description">Movie poster picture</string>
     <string name="movie_backdrop_content_description">Movie backdrop picture</string>
+    <string name="trailer_thumbnail_content_description">Trailer thumbnail picture</string>
 
     <!-- Button title  -->
     <string name="retry">Retry</string>
@@ -28,6 +29,7 @@
     <string name="activity_movie_release_date_text">2016–12–02</string>
     <string name="activity_movie_rating_text">6.1/10</string>
     <string name="activity_movie_plot_synopsis_text">"After the events of Captain America: Civil War, King T'Challa returns home to the reclusive, technologically advanced African nation of Wakanda to serve as his country's new leader. However, T'Challa soon finds that he is challenged for the throne from factions within his own country. When two foes conspire to destroy Wakanda, the hero known as Black Panther must team up with C.I.A. agent Everett K. Ross and members of the Dora Milaje, Wakandan special forces, to prevent Wakanda from being dragged into a world war."</string>
+    <string name="activity_movie_trailer_text">Official Trailer</string>
 
 
 </resources>

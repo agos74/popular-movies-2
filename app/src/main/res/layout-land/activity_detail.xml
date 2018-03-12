@@ -2,6 +2,7 @@
 
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -61,100 +62,115 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
-            android:id="@+id/layout_first_row"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="@dimen/padding_medium">
-
-            <com.inthecheesefactory.thecheeselibrary.widget.AdjustableImageView
-                android:id="@+id/poster_iv"
-                android:layout_width="@dimen/poster_width"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:contentDescription="@string/movie_poster_content_description" />
+            android:orientation="vertical"
+            android:padding="@dimen/padding_medium"
+            tools:context="com.udacity.popularmovies.DetailActivity">
 
             <LinearLayout
+                android:id="@+id/layout_first_row"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingLeft="@dimen/padding_large"
-                android:paddingRight="@dimen/padding_large"
-                android:paddingStart="@dimen/padding_large">
+                android:orientation="horizontal"
+                android:padding="@dimen/padding_medium">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
+                <com.inthecheesefactory.thecheeselibrary.widget.AdjustableImageView
+                    android:id="@+id/poster_iv"
+                    android:layout_width="@dimen/poster_width"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/original_title_label"
-                        style="@style/DetailLabelStyle"
-                        android:text="@string/detail_original_title_label" />
-
-                    <TextView
-                        android:id="@+id/original_title_tv"
-                        style="@style/DetailTextStyle"
-                        android:layout_below="@id/original_title_label"
-                        android:text="@string/activity_movie_title_text" />
-
-                </RelativeLayout>
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@string/movie_poster_content_description" />
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="vertical"
+                    android:paddingLeft="@dimen/padding_large"
+                    android:paddingRight="@dimen/padding_large"
+                    android:paddingStart="@dimen/padding_large">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:paddingTop="@dimen/padding_large">
+                        android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/release_date_label"
+                            android:id="@+id/original_title_label"
                             style="@style/DetailLabelStyle"
-                            android:text="@string/detail_release_date_label" />
+                            android:text="@string/detail_original_title_label" />
 
                         <TextView
-                            android:id="@+id/release_date_tv"
+                            android:id="@+id/original_title_tv"
                             style="@style/DetailTextStyle"
-                            android:layout_below="@id/release_date_label"
-                            android:text="@string/activity_movie_release_date_text" />
+                            android:layout_below="@id/original_title_label"
+                            android:text="@string/activity_movie_title_text" />
 
                     </RelativeLayout>
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
+                    <LinearLayout
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingTop="@dimen/padding_large">
+                        android:orientation="horizontal">
 
-                        <TextView
-                            android:id="@+id/rating_label"
-                            style="@style/DetailLabelStyle"
-                            android:text="@string/detail_rating_label" />
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:paddingTop="@dimen/padding_large">
 
-                        <TextView
-                            android:id="@+id/rating_tv"
-                            style="@style/DetailTextStyle"
-                            android:layout_below="@id/rating_label"
-                            android:text="@string/activity_movie_rating_text" />
-                    </RelativeLayout>
+                            <TextView
+                                android:id="@+id/release_date_label"
+                                style="@style/DetailLabelStyle"
+                                android:text="@string/detail_release_date_label" />
+
+                            <TextView
+                                android:id="@+id/release_date_tv"
+                                style="@style/DetailTextStyle"
+                                android:layout_below="@id/release_date_label"
+                                android:text="@string/activity_movie_release_date_text" />
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingTop="@dimen/padding_large">
+
+                            <TextView
+                                android:id="@+id/rating_label"
+                                style="@style/DetailLabelStyle"
+                                android:text="@string/detail_rating_label" />
+
+                            <TextView
+                                android:id="@+id/rating_tv"
+                                style="@style/DetailTextStyle"
+                                android:layout_below="@id/rating_label"
+                                android:text="@string/activity_movie_rating_text" />
+                        </RelativeLayout>
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/plot_synopsis_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/padding_large"
+                        android:text="@string/activity_movie_plot_synopsis_text"
+                        android:textSize="@dimen/text_sz_medium" />
+
                 </LinearLayout>
-
-                <TextView
-                    android:id="@+id/plot_synopsis_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/padding_large"
-                    android:text="@string/activity_movie_plot_synopsis_text"
-                    android:textSize="@dimen/text_sz_medium" />
 
             </LinearLayout>
 
-        </LinearLayout>
+            <FrameLayout
+                android:id="@+id/fragmentContainer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/layout_first_row" />
+
+        </RelativeLayout>
 
     </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>
