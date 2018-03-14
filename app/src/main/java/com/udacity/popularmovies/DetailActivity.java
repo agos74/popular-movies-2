@@ -77,6 +77,11 @@ public class DetailActivity extends AppCompatActivity {
         Fragment fragment = fm.findFragmentById(R.id.fragmentContainer);
         if (fragment == null) {
             fragment = new TrailerListFragment();
+
+            Bundle args = new Bundle();
+            args.putString("movieId", movie.getId());
+            fragment.setArguments(args);
+
             fm.beginTransaction()
                     .add(R.id.fragmentContainer, fragment)
                     .commit();

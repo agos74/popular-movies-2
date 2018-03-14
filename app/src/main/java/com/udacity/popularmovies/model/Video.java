@@ -20,6 +20,10 @@ public class Video {
         this.type = type;
     }
 
+    public Video() {
+
+    }
+
     public String getId() {
         return id;
     }
@@ -58,5 +62,16 @@ public class Video {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        return "Video{" +
+                "id='" + id + '\'' +
+                ", key='" + key + '\'' +
+                ", name='" + name + '\'' +
+                ", site='" + site + '\'' +
+                ", type='" + type + '\'' +
+                '}';
     }
 }

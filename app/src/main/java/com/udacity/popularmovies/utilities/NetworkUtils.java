@@ -7,7 +7,9 @@ package com.udacity.popularmovies.utilities;
 import android.net.Uri;
 
 import com.udacity.popularmovies.BuildConfig;
+import com.udacity.popularmovies.DetailActivity;
 import com.udacity.popularmovies.MainActivity;
+import com.udacity.popularmovies.TrailerListFragment;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,7 +36,7 @@ public class NetworkUtils {
     private static final String TOP_RATED_ENDPOINT = "top_rated";
 
     private static final String VIDEOS_ENDPOINT = "videos";
-    private static final String REVIEW_ENDPOINT = "reviews";
+    private static final String REVIEWS_ENDPOINT = "reviews";
 
 
     /**
@@ -73,11 +75,20 @@ public class NetworkUtils {
     /**
      * Builds the URL used to query TheMovieDB.
      *
-     * @param movieId  The movieId that will be queried for.
-     * @param endPoint The results type (videos or reviews).
+     * @param movieId     The movieId that will be queried for.
+     * @param requestType The request type (videos or reviews).
      * @return The URL to use to query TheMovieDB server.
      */
-    public static URL buildUrlWithMovieId(String movieId, String endPoint) {
+    public static URL buildUrlWithMovieId(String movieId, String requestType) {
+        String endPoint = null;
+        switch (requestType) {
+            case TrailerListFragment.VIDEOS_REQUEST_KEY:
+                endPoint = VIDEOS_ENDPOINT;
+                break;
+            case TrailerListFragment.REVIEWS_REQUEST_KEY:
+                endPoint = REVIEWS_ENDPOINT;
+                break;
+        }
         Uri builtUri = Uri.parse(THEMOVIEDB_BASE_URL).buildUpon()
                 .appendEncodedPath(movieId)
                 .appendEncodedPath(endPoint)

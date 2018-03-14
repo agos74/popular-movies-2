@@ -1,7 +1,10 @@
 package com.udacity.popularmovies.utilities;
 
 
+import android.util.Log;
+
 import com.udacity.popularmovies.model.Movie;
+import com.udacity.popularmovies.model.Video;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -73,7 +76,7 @@ public class TheMovieDBJsonUtils {
             JSONObject movieJson = moviesArray.getJSONObject(i);
 
             if (movieJson.has(TMDB_ID)) {
-                movie.setTitle(movieJson.optString(TMDB_ID));
+                movie.setId(movieJson.optString(TMDB_ID));
             }
 
             if (movieJson.has(TMDB_RATING)) {
@@ -104,7 +107,6 @@ public class TheMovieDBJsonUtils {
                 movie.setReleaseDate(movieJson.optString(TMDB_RELEASE_DATE));
             }
 
-
             moviesList.add(movie);
 
             //for debug purpose
@@ -112,8 +114,83 @@ public class TheMovieDBJsonUtils {
 
         }
 
-
         return moviesList;
     }
 
+    public static List<Video> parseVideosJson(String videosJsonStr) throws JSONException {
+
+        /* Videos information. Each video is an element of the "results" array */
+        final String TMDB_RESULTS = "results";
+
+        final String TMDB_ID = "id";
+        final String TMDB_KEY = "key";
+        final String TMDB_NAME = "name";
+        final String TMDB_TYPE = "type";
+        final String TMDB_SITE = "site";
+
+        //error message code
+        final String TMDB_MESSAGE_CODE = "cod";
+
+        /* Video List to hold videos */
+        List<Video> videoList = new ArrayList<>();
+
+        JSONObject videosJson = new JSONObject(videosJsonStr);
+
+        /* Is there an error? */
+        if (videosJson.has(TMDB_MESSAGE_CODE)) {
+            int errorCode = videosJson.getInt(TMDB_MESSAGE_CODE);
+
+            switch (errorCode) {
+                case HttpURLConnection.HTTP_OK:
+                    break;
+                case HttpURLConnection.HTTP_UNAUTHORIZED:
+                    /* Invalid API key: You must be granted a valid key. */
+                    return null;
+                case HttpURLConnection.HTTP_NOT_FOUND:
+                    /* The resource you requested could not be found. */
+                    return null;
+                default:
+                    /* Server probably down */
+                    return null;
+            }
+        }
+
+        JSONArray videosArray = videosJson.getJSONArray(TMDB_RESULTS);
+
+        for (int i = 0; i < videosArray.length(); i++) {
+
+            Video video = new Video();
+
+            /* Get the JSON object representing the video */
+            JSONObject videoJson = videosArray.getJSONObject(i);
+
+            if (videoJson.has(TMDB_ID)) {
+                video.setId(videoJson.optString(TMDB_ID));
+            }
+
+            if (videoJson.has(TMDB_KEY)) {
+                video.setKey(videoJson.optString(TMDB_KEY));
+            }
+
+            if (videoJson.has(TMDB_NAME)) {
+                video.setName(videoJson.optString(TMDB_NAME));
+            }
+
+            if (videoJson.has(TMDB_TYPE)) {
+                video.setType(videoJson.optString(TMDB_TYPE));
+            }
+
+            if (videoJson.has(TMDB_SITE)) {
+                video.setSite(videoJson.optString(TMDB_SITE));
+            }
+
+            videoList.add(video);
+
+            //for debug purpose
+            Log.d("Video", video.toString());
+
+        }
+
+        return videoList;
+    }
 }
