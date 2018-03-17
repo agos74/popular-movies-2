@@ -37,7 +37,7 @@ import butterknife.ButterKnife;
 
 public class TrailerListFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Video>> {
 
-    private static final String TAG = Video.class.getSimpleName();
+    private static final String TAG = TrailerListFragment.class.getSimpleName();
 
     private static final int VIDEOS_LOADER_ID = 1;
 
@@ -51,18 +51,6 @@ public class TrailerListFragment extends Fragment implements LoaderManager.Loade
     private static String movieId;
 
     private VideoAdapter mVideoAdapter;
-
-    private List<Video> mVideoList;
-
-    private List<Video> getVideoList() {
-        int amount = 2;
-        List<Video> list = new ArrayList<>(amount);
-        while (list.size() < amount) {
-            Video video = new Video("58f7e846c3a3684529000ea3", "3jBFwltrxJw", "Official Trailer (Extended version)", "YouTube", "Trailer");
-            list.add(video);
-        }
-        return list;
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -119,16 +107,15 @@ public class TrailerListFragment extends Fragment implements LoaderManager.Loade
 
     private static class MyAsyncTaskLoader extends AsyncTaskLoader<List<Video>> {
 
-        List<Video> mVideoList = new ArrayList<>();
+        List<Video> mVideoList;
 
         public MyAsyncTaskLoader(Context context) {
             super(context);
-            onForceLoad();
         }
 
         @Override
         protected void onStartLoading() {
-            Log.d(TAG, "MyAsyncTask: OnStartLoading:videos=" + mVideoList.size());
+            Log.d(TAG, "MyAsyncTask: OnStartLoading:videos=" + (mVideoList == null ? 0 : mVideoList.size()));
             if (mVideoList != null) {
                 deliverResult(mVideoList);
             } else {
@@ -230,7 +217,7 @@ public class TrailerListFragment extends Fragment implements LoaderManager.Loade
 
         @Override
         public int getItemCount() {
-            return mVideoList.size();
+            return (mVideoList == null) ? 0 : mVideoList.size();
         }
 
         public void setVideoList(List<Video> videoList) {

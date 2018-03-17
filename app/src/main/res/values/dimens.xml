@@ -12,6 +12,8 @@
     <dimen name="text_sz_large">18sp</dimen>
     <dimen name="text_sz_extra_large">22sp</dimen>
 
+    <dimen name="padding_extra_small">4dp</dimen>
+    <dimen name="padding_small">6dp</dimen>
     <dimen name="padding_medium">10dp</dimen>
     <dimen name="padding_large">15dp</dimen>
     <dimen name="padding_extra_large">20dp</dimen>

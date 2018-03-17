@@ -159,11 +159,18 @@
                 android:text="@string/activity_movie_plot_synopsis_text"
                 android:textSize="@dimen/text_sz_medium" />
 
+            <TextView
+                android:id="@+id/trailers_title_tv"
+                style="@style/sectionHeader"
+                android:layout_width="wrap_content"
+                android:layout_below="@id/plot_synopsis_tv"
+                android:text="Trailers" />
+
             <FrameLayout
                 android:id="@+id/fragmentContainer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/plot_synopsis_tv" />
+                android:layout_below="@id/trailers_title_tv" />
 
         </RelativeLayout>
 

@@ -28,5 +28,19 @@
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
+    <!-- Style for Trailers an Reviews labels -->
+    <style name="TitleLabelStyle" parent="DetailLabelStyle">
+        <item name="android:paddingTop">@dimen/padding_large</item>
+        <item name="android:paddingBottom">@dimen/padding_medium</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+
+    <style name="sectionHeader" parent="TitleLabelStyle">
+        <item name="android:drawableBottom">@drawable/section_header</item>
+        <item name="android:drawablePadding">@dimen/padding_extra_small</item>
+        <item name="android:layout_marginTop">@dimen/margin_medium</item>
+        <item name="android:paddingLeft">@dimen/padding_extra_small</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
 
 </resources>

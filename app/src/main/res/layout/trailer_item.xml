@@ -1,29 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="@dimen/poster_width"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:orientation="vertical"
-    android:paddingBottom="8dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingTop="8dp">
+    android:orientation="vertical">
 
-    <com.inthecheesefactory.thecheeselibrary.widget.AdjustableImageView
-        android:id="@+id/video_iv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:contentDescription="@string/trailer_thumbnail_content_description"
-        android:scaleType="centerCrop" />
+    <android.support.v7.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/name_tv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/activity_movie_trailer_text"
-        android:textAppearance="?attr/textAppearanceListItem" />
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|center_horizontal"
+            android:padding="@dimen/padding_small">
+
+            <com.inthecheesefactory.thecheeselibrary.widget.AdjustableImageView
+                android:id="@+id/video_iv"
+                android:layout_width="@dimen/video_width"
+                android:layout_height="@dimen/video_height"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/trailer_thumbnail_content_description"
+                android:scaleType="centerCrop"
+                android:src="@drawable/movie_poster" />
+
+            <ImageView
+                android:id="@+id/play_button_iv"
+                android:layout_width="@dimen/video_width"
+                android:layout_height="@dimen/video_height"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_play_circle_outline_white_48px" />
+
+            <TextView
+                android:id="@+id/name_tv"
+                android:layout_width="@dimen/poster_width"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/video_iv"
+                android:text="@string/activity_movie_trailer_text"
+                android:textAppearance="?attr/textAppearanceListItem" />
 
 
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
 </LinearLayout>

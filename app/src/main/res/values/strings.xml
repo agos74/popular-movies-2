@@ -15,13 +15,15 @@
     <string name="detail_release_date_label">Release date</string>
     <string name="detail_rating_label">Rating</string>
     <!--<string name="detail_plot_synopsis_label">Plot synopsis</string>-->
+    <string name="trailers_label">Trailers</string>
+    <string name="reviews_label">Reviews</string>
 
     <!-- Content descriptions-->
     <string name="movie_poster_content_description">Movie poster picture</string>
     <string name="movie_backdrop_content_description">Movie backdrop picture</string>
     <string name="trailer_thumbnail_content_description">Trailer thumbnail picture</string>
 
-    <!-- Button title  -->
+    <!-- Button title -->
     <string name="retry">Retry</string>
 
     <!-- Movie details text -->

@@ -25,7 +25,7 @@ import butterknife.ButterKnife;
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterViewHolder> {
 
 
-    private List<Movie> mMoviesList = new ArrayList<>();
+    private List<Movie> mMoviesList;
 
     /**
      * An on-click handler that we've defined to make it easy for an Activity to interface with
