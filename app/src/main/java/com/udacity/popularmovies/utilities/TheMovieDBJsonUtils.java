@@ -24,6 +24,8 @@ public class TheMovieDBJsonUtils {
     public static final String TMDB_IMAGE_WIDTH_MEDIUM = "w185/";
     public static final String TMDB_IMAGE_WIDTH_LARGE = "w500/";
 
+    public static final String TMDB_TYPE_TRAILER_KEY = "Trailer";
+
     public static List<Movie> parseMoviesJson(String moviesJsonStr) throws JSONException {
 
 
@@ -117,7 +119,7 @@ public class TheMovieDBJsonUtils {
         return moviesList;
     }
 
-    public static List<Video> parseVideosJson(String videosJsonStr) throws JSONException {
+    public static List<Video> parseVideosJson(String videosJsonStr, boolean onlyTrailers) throws JSONException {
 
         /* Videos information. Each video is an element of the "results" array */
         final String TMDB_RESULTS = "results";
@@ -184,7 +186,14 @@ public class TheMovieDBJsonUtils {
                 video.setSite(videoJson.optString(TMDB_SITE));
             }
 
-            videoList.add(video);
+            //get only "Trailer" type?
+            if (onlyTrailers) {
+                if (video.getType().equals(TMDB_TYPE_TRAILER_KEY)) {
+                    videoList.add(video);
+                }
+            } else {
+                videoList.add(video);
+            }
 
             //for debug purpose
             Log.d("Video", video.toString());

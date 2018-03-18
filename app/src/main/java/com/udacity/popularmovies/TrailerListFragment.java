@@ -96,7 +96,7 @@ public class TrailerListFragment extends Fragment implements LoaderManager.Loade
             // Instead of iterating through every video, use mVideoAdapter.setVideoList and pass in the video List
             mVideoAdapter.setVideoList(videoList);
         }
-        Log.d(TAG, "OnLoadFinished: videos=" + videoList.size());
+        Log.d(TAG, "OnLoadFinished: videos=" + (videoList == null ? 0 : videoList.size()));
 
     }
 
@@ -134,7 +134,7 @@ public class TrailerListFragment extends Fragment implements LoaderManager.Loade
                 String jsonVideosResponse = NetworkUtils
                         .getResponseFromHttpUrl(videosRequestUrl);
 
-                return TheMovieDBJsonUtils.parseVideosJson(jsonVideosResponse);
+                return TheMovieDBJsonUtils.parseVideosJson(jsonVideosResponse, true);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -148,7 +148,7 @@ public class TrailerListFragment extends Fragment implements LoaderManager.Loade
          * @param videoList The result of the load
          */
         public void deliverResult(List<Video> videoList) {
-            Log.d(TAG, "MyAsyncTask: deliverResult:videos=" + videoList.size());
+            Log.d(TAG, "MyAsyncTask: deliverResult:videos=" + (videoList == null ? 0 : videoList.size()));
 
             mVideoList = videoList;
             super.deliverResult(videoList);

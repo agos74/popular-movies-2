@@ -164,11 +164,18 @@
 
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/trailers_title_tv"
+                style="@style/sectionHeader"
+                android:layout_width="wrap_content"
+                android:layout_below="@id/layout_first_row"
+                android:text="@string/trailers_label" />
+
             <FrameLayout
                 android:id="@+id/fragmentContainer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/layout_first_row" />
+                android:layout_below="@id/trailers_title_tv" />
 
         </RelativeLayout>
 
