@@ -4,6 +4,7 @@ package com.udacity.popularmovies.utilities;
 import android.util.Log;
 
 import com.udacity.popularmovies.model.Movie;
+import com.udacity.popularmovies.model.Review;
 import com.udacity.popularmovies.model.Video;
 
 import org.json.JSONArray;
@@ -24,13 +25,16 @@ public class TheMovieDBJsonUtils {
     public static final String TMDB_IMAGE_WIDTH_MEDIUM = "w185/";
     public static final String TMDB_IMAGE_WIDTH_LARGE = "w500/";
 
+    public static final String TMDB_RESULTS = "results";
+
+    //error message code
+    public static final String TMDB_MESSAGE_CODE = "cod";
+
     public static final String TMDB_TYPE_TRAILER_KEY = "Trailer";
 
     public static List<Movie> parseMoviesJson(String moviesJsonStr) throws JSONException {
 
-
         /* Movies information. Each movie is an element of the "results" array */
-        final String TMDB_RESULTS = "results";
 
         final String TMDB_ID = "id";
         final String TMDB_RATING = "vote_average";
@@ -41,8 +45,6 @@ public class TheMovieDBJsonUtils {
         final String TMDB_PLOT_SYNOPSIS = "overview";
         final String TMDB_RELEASE_DATE = "release_date";
 
-        //error message code
-        final String TMDB_MESSAGE_CODE = "cod";
 
         /* Movies List to hold movies */
         List<Movie> moviesList = new ArrayList<>();
@@ -122,7 +124,6 @@ public class TheMovieDBJsonUtils {
     public static List<Video> parseVideosJson(String videosJsonStr, boolean onlyTrailers) throws JSONException {
 
         /* Videos information. Each video is an element of the "results" array */
-        final String TMDB_RESULTS = "results";
 
         final String TMDB_ID = "id";
         final String TMDB_KEY = "key";
@@ -130,8 +131,6 @@ public class TheMovieDBJsonUtils {
         final String TMDB_TYPE = "type";
         final String TMDB_SITE = "site";
 
-        //error message code
-        final String TMDB_MESSAGE_CODE = "cod";
 
         /* Video List to hold videos */
         List<Video> videoList = new ArrayList<>();
@@ -201,5 +200,74 @@ public class TheMovieDBJsonUtils {
         }
 
         return videoList;
+    }
+
+    public static List<Review> parseReviewsJson(String reviewsJsonStr) throws JSONException {
+
+        /* Reviews information. Each review is an element of the "results" array */
+
+        final String TMDB_ID = "id";
+        final String TMDB_AUTHOR = "author";
+        final String TMDB_CONTENT = "content";
+        final String TMDB_URL = "url";
+
+
+        /* Review List to hold reviews */
+        List<Review> reviewList = new ArrayList<>();
+
+        JSONObject reviewsJson = new JSONObject(reviewsJsonStr);
+
+        /* Is there an error? */
+        if (reviewsJson.has(TMDB_MESSAGE_CODE)) {
+            int errorCode = reviewsJson.getInt(TMDB_MESSAGE_CODE);
+
+            switch (errorCode) {
+                case HttpURLConnection.HTTP_OK:
+                    break;
+                case HttpURLConnection.HTTP_UNAUTHORIZED:
+                    /* Invalid API key: You must be granted a valid key. */
+                    return null;
+                case HttpURLConnection.HTTP_NOT_FOUND:
+                    /* The resource you requested could not be found. */
+                    return null;
+                default:
+                    /* Server probably down */
+                    return null;
+            }
+        }
+
+        JSONArray reviewsArray = reviewsJson.getJSONArray(TMDB_RESULTS);
+
+        for (int i = 0; i < reviewsArray.length(); i++) {
+
+            Review review = new Review();
+
+            /* Get the JSON object representing the review */
+            JSONObject reviewJson = reviewsArray.getJSONObject(i);
+
+            if (reviewJson.has(TMDB_ID)) {
+                review.setId(reviewJson.optString(TMDB_ID));
+            }
+
+            if (reviewJson.has(TMDB_AUTHOR)) {
+                review.setAuthor(reviewJson.optString(TMDB_AUTHOR));
+            }
+
+            if (reviewJson.has(TMDB_CONTENT)) {
+                review.setContent(reviewJson.optString(TMDB_CONTENT));
+            }
+
+            if (reviewJson.has(TMDB_URL)) {
+                review.setUrl(reviewJson.optString(TMDB_URL));
+            }
+
+            reviewList.add(review);
+
+            //for debug purpose
+            Log.d("Review", review.toString());
+
+        }
+
+        return reviewList;
     }
 }

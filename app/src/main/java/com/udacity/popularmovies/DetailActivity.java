@@ -45,7 +45,10 @@ public class DetailActivity extends AppCompatActivity {
     TextView mRatingTv;
     @BindView(R.id.plot_synopsis_tv)
     TextView mPlotSynopsisTv;
-
+    @BindView(R.id.reviews_title_tv)
+    TextView mReviewsTitleTv;
+    @BindView(R.id.trailers_title_tv)
+    TextView mTrailersTitleTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,21 +77,42 @@ public class DetailActivity extends AppCompatActivity {
 
         //load trailers fragment
         FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = fm.findFragmentById(R.id.fragmentContainer);
-        if (fragment == null) {
-            fragment = new TrailerListFragment();
+        Fragment fragmentTrailers = fm.findFragmentById(R.id.fragmentContainer_trailers);
+        if (fragmentTrailers == null) {
+            fragmentTrailers = new TrailerListFragment();
 
             Bundle args = new Bundle();
             args.putString("movieId", movie.getId());
-            fragment.setArguments(args);
+            fragmentTrailers.setArguments(args);
 
             fm.beginTransaction()
-                    .add(R.id.fragmentContainer, fragment)
+                    .add(R.id.fragmentContainer_trailers, fragmentTrailers)
+                    .commit();
+        }
+
+        //load reviews fragment
+        Fragment fragmentReviews = fm.findFragmentById(R.id.fragmentContainer_reviews);
+        if (fragmentReviews == null) {
+            fragmentReviews = new ReviewListFragment();
+
+            Bundle args = new Bundle();
+            args.putString("movieId", movie.getId());
+            fragmentReviews.setArguments(args);
+
+            fm.beginTransaction()
+                    .add(R.id.fragmentContainer_reviews, fragmentReviews)
                     .commit();
         }
 
     }
 
+    public void setReviewsTitleText(String numReviews) {
+        mReviewsTitleTv.setText(getString(R.string.reviews_label) + " (" + numReviews + ")");
+    }
+
+    public void setTrailersTitleText(String numTrailers) {
+        mTrailersTitleTv.setText(getString(R.string.trailers_label) + " (" + numTrailers + ")");
+    }
 
     private void populateUI(Movie movie) {
 

@@ -9,6 +9,7 @@ import android.net.Uri;
 import com.udacity.popularmovies.BuildConfig;
 import com.udacity.popularmovies.DetailActivity;
 import com.udacity.popularmovies.MainActivity;
+import com.udacity.popularmovies.ReviewListFragment;
 import com.udacity.popularmovies.TrailerListFragment;
 
 import java.io.IOException;
@@ -85,7 +86,7 @@ public class NetworkUtils {
             case TrailerListFragment.VIDEOS_REQUEST_KEY:
                 endPoint = VIDEOS_ENDPOINT;
                 break;
-            case TrailerListFragment.REVIEWS_REQUEST_KEY:
+            case ReviewListFragment.REVIEWS_REQUEST_KEY:
                 endPoint = REVIEWS_ENDPOINT;
                 break;
         }

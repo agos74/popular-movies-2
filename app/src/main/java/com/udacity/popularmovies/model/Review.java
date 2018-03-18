@@ -9,6 +9,7 @@ public class Review {
     private String id;
     private String author;
     private String content;
+    private String url;
 
     public String getId() {
         return id;
@@ -32,5 +33,23 @@ public class Review {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    @Override
+    public String toString() {
+        return "Review{" +
+                "id='" + id + '\'' +
+                ", author='" + author + '\'' +
+                ", content='" + content + '\'' +
+                ", url='" + url + '\'' +
+                '}';
     }
 }

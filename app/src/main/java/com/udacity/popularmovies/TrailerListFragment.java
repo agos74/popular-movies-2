@@ -42,7 +42,6 @@ public class TrailerListFragment extends Fragment implements LoaderManager.Loade
     private static final int VIDEOS_LOADER_ID = 1;
 
     public static final String VIDEOS_REQUEST_KEY = "v";
-    public static final String REVIEWS_REQUEST_KEY = "r";
 
     //ButterKnife Binding
     @BindView(R.id.recyclerview_trailers)
@@ -97,6 +96,10 @@ public class TrailerListFragment extends Fragment implements LoaderManager.Loade
             mVideoAdapter.setVideoList(videoList);
         }
         Log.d(TAG, "OnLoadFinished: videos=" + (videoList == null ? 0 : videoList.size()));
+
+        //update Trailers title with number
+        Integer numTrailers = videoList == null ? 0 : videoList.size();
+        ((DetailActivity) getActivity()).setTrailersTitleText(numTrailers.toString());
 
     }
 

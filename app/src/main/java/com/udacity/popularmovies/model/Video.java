@@ -12,14 +12,6 @@ public class Video {
     private String site;
     private String type;
 
-    public Video(String id, String key, String name, String site, String type) {
-        this.id = id;
-        this.key = key;
-        this.name = name;
-        this.site = site;
-        this.type = type;
-    }
-
     public Video() {
 
     }
