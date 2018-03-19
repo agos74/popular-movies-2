@@ -31,6 +31,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
+
+        <!-- Register the MovieContentProvider -->
+        <!-- exported = false limits access to this ContentProvider to only this app -->
+        <provider
+            android:name="com.udacity.popularmovies.data.MovieContentProvider"
+            android:authorities="com.udacity.popularmovies"
+            android:exported="false" />
+
     </application>
 
 </manifest>
