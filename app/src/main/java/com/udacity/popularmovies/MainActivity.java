@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
+import com.facebook.stetho.Stetho;
 import com.udacity.popularmovies.model.Movie;
 import com.udacity.popularmovies.utilities.GridSpacingItemDecoration;
 import com.udacity.popularmovies.utilities.NetworkUtils;
@@ -111,6 +112,14 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
             }
         });
 
+        // Stetho integration, to view dataabase in chrome inspect.
+        Stetho.initialize(
+                Stetho.newInitializerBuilder(this)
+                        .enableDumpapp(
+                                Stetho.defaultDumperPluginsProvider(this))
+                        .enableWebKitInspector(
+                                Stetho.defaultInspectorModulesProvider(this))
+                        .build());
 
         // Initialize the AsyncTaskLoader
         getSupportLoaderManager().initLoader(MOVIES_LOADER_ID, null, MainActivity.this);
