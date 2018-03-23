@@ -311,6 +311,20 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         return true;
     }
 
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        switch (mSortingType) {
+            case MOST_POPULAR_ORDER_KEY:
+                menu.findItem(R.id.action_sort_order_popular).setChecked(true);
+                break;
+            case TOP_RATED_ORDER_KEY:
+                menu.findItem(R.id.action_sort_order_rated).setChecked(true);
+                break;
+        }
+        return true;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -321,6 +335,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
                 break;
             case R.id.action_sort_order_rated:
                 mSortingType = TOP_RATED_ORDER_KEY;
+                break;
+            case R.id.action_settings:
+                Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
+                startActivity(startSettingsActivity);
                 break;
             default:
                 return super.onOptionsItemSelected(item);

@@ -37,5 +37,79 @@
     <string name="activity_movie_review_content_text">"**The earthlings are united to defend the home from another alien attack.**\r\n\r\nI have said it many times that when I love a film, I always pray for a sequel to come. But I won't do that for all the films like perhaps 'Taken' and this one. These are not designed for that kind of a stretch or to own a franchise. So anyway they have made it and I'd watched. Since I was not expecting it, I did not care about the how it ends. I mean critically failed and the box office was okay, but did not meet the expectations. I mean not found anywhere near to the original film's collection.\r\n\r\nFor me, minus half point for the Chinese flavour. I think the Hollywood must stop leaning towards Chinese contents. It is like they are ignoring the rest of the world. I want the old days American films, not this yuan targeted films. Sorry, that is one of the reasons why I disliked films like this, 'Now You See Me 2' and many other recent sino-Hollywood films.\r\n\r\nThis story takes place 20 years later to the original film. Only a handful of characters returned and many of them were new. So now the humans leaped forward after adapting the alien technology. But when they learn the distress call was sent to the base of the enemy from the 20 years ago event, they are underprepared for another alien attack that follows very soon. Without any option they push their full force to defend the earth and it would they succeed or not is what the remaining film to reveal.\r\n\r\nNowadays the graphics are not an issue. The filmmaking had touched down for a standard in the visual quality, especially a big production like this. So those parts even overplay the performances of the real actors. We have seen that from Gollum, King Kong and many other monster films. So if you are watching a today's high end film means, it is a pleasure from the blow ups we expect the most. Similar to killings from the horror thrillers. This film does that so well, that mean it is entertaining, but not the overall film very praisable.\r\n\r\nThis story can be easily connected to many classics such as 'Star Wars' and 'Avatar'. Because how it ends seems like a story about the origins of those films. So the third film is like definitely takes us deep into the space. Looks very interesting, but does it work is the real question. It is already in the work with the same director. So lets wait and see how it corrects its mistakes. Meantime, you can watch this if you haven't yet, but it is an average film.\r\n\r\n_5.5/10_"</string>
     <string name="review_author_label">Author:</string>
     <string name="play_video">Play Video</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_title_social_recommendations">Enable social recommendations</string>
+    <string name="pref_description_social_recommendations">Recommendations for people to contact
+        based on your message history
+    </string>
+
+    <string name="pref_title_display_name">Display name</string>
+    <string name="pref_default_display_name">John Smith</string>
+
+    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
+    <string-array name="pref_example_list_titles">
+        <item>Always</item>
+        <item>When possible</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_example_list_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </string-array>
+
+    <!-- Example settings for Data & Sync -->
+    <string name="pref_header_data_sync">Data &amp; sync</string>
+
+    <string name="pref_title_sync_frequency">Sync frequency</string>
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>-1</item>
+    </string-array>
+
+    <string-array name="list_preference_entries">
+        <item>Entry 1</item>
+        <item>Entry 2</item>
+        <item>Entry 3</item>
+    </string-array>
+
+    <string-array name="list_preference_entry_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="multi_select_list_preference_default_value" />
+
+    <string name="pref_title_system_sync_settings">System sync settings</string>
+
+    <!-- Example settings for Notifications -->
+    <string name="pref_header_notifications">Notifications</string>
+
+    <string name="pref_title_new_message_notifications">New message notifications</string>
+
+    <string name="pref_title_ringtone">Ringtone</string>
+    <string name="pref_ringtone_silent">Silent</string>
+
+    <string name="pref_title_vibrate">Vibrate</string>
+    <string name="action_settings">Settings</string>
 
 </resources>
