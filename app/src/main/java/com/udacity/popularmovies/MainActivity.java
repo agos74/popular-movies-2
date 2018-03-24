@@ -2,12 +2,13 @@ package com.udacity.popularmovies;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
+import android.content.SharedPreferences;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -31,7 +32,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements MovieAdapter.MovieAdapterOnClickHandler, LoaderManager.LoaderCallbacks<List<Movie>> {
+public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener, MovieAdapter.MovieAdapterOnClickHandler, LoaderManager.LoaderCallbacks<List<Movie>> {
 
     public static final String MOST_POPULAR_ORDER_KEY = "p";
     public static final String TOP_RATED_ORDER_KEY = "t";
@@ -64,6 +65,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     private static String mSortingType = MOST_POPULAR_ORDER_KEY;
 
     private static final int MOVIES_LOADER_ID = 0;
+
+    private static String mLanguage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,9 +124,20 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
                                 Stetho.defaultInspectorModulesProvider(this))
                         .build());
 
+
+        setupSharedPreferences();
+
         // Initialize the AsyncTaskLoader
         getSupportLoaderManager().initLoader(MOVIES_LOADER_ID, null, MainActivity.this);
 
+    }
+
+    private void setupSharedPreferences() {
+        // Get all of the values from shared preferences to set it up
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mLanguage = sharedPreferences.getString(getResources().getString(R.string.pref_language_key), getResources().getString(R.string.pref_language_default));
+        // Register the listener
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 
 
@@ -181,6 +195,22 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         return new MyAsyncTaskLoader(this);
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
+        if (key.equals(getString(R.string.pref_language_key))) {
+            mLanguage = sharedPreferences.getString(key, getResources().getString(R.string.pref_language_default));
+            getSupportLoaderManager().initLoader(MOVIES_LOADER_ID, null, MainActivity.this);
+        }
+    }
+
+    protected void onDestroy() {
+        super.onDestroy();
+        // Unregister VisualizerActivity as an OnPreferenceChangedListener to avoid any memory leaks.
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .unregisterOnSharedPreferenceChangeListener(this);
+    }
+
     private static class MyAsyncTaskLoader extends AsyncTaskLoader<List<Movie>> {
 
         List<Movie> mMoviesList = null;
@@ -203,7 +233,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         public List<Movie> loadInBackground() {
 
             String orderType = mSortingType;
-            URL moviesRequestUrl = NetworkUtils.buildUrlWithSortingType(orderType);
+            String language = mLanguage;
+            URL moviesRequestUrl = NetworkUtils.buildUrlWithSortingType(orderType, language);
 
             try {
                 String jsonMoviesResponse = NetworkUtils

@@ -29,7 +29,7 @@ public class NetworkUtils {
     private static final String THEMOVIEDB_BASE_URL = "http://api.themoviedb.org/3/movie";
 
     private static final String PARAM_API_KEY = "api_key";
-
+    private static final String PARAM_LANGUAGE = "language";
     private static final String THEMOVIEDB_API_KEY = BuildConfig.API_KEY;
 
     /* The sort type we want our API to return */
@@ -44,9 +44,10 @@ public class NetworkUtils {
      * Builds the URL used to query TheMovieDB.
      *
      * @param sortingType The keyword that will be queried for.
+     * @param language
      * @return The URL to use to query TheMovieDB server.
      */
-    public static URL buildUrlWithSortingType(String sortingType) {
+    public static URL buildUrlWithSortingType(String sortingType, String language) {
         String endPoint;
         switch (sortingType) {
             case MainActivity.MOST_POPULAR_ORDER_KEY:
@@ -61,6 +62,7 @@ public class NetworkUtils {
         Uri builtUri = Uri.parse(THEMOVIEDB_BASE_URL).buildUpon()
                 .appendEncodedPath(endPoint)
                 .appendQueryParameter(PARAM_API_KEY, THEMOVIEDB_API_KEY)
+                .appendQueryParameter(PARAM_LANGUAGE, language)
                 .build();
 
         URL url = null;
