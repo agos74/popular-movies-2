@@ -44,21 +44,10 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/author_tv"
                 android:ellipsize="end"
-                android:maxLines="3"
                 android:minLines="3"
                 android:paddingTop="@dimen/padding_small"
                 android:text="@string/activity_movie_review_content_text"
                 android:textSize="@dimen/text_sz_medium" />
-
-            <Button
-                android:id="@+id/buttonToggle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/author_tv"
-                android:layout_alignBottom="@+id/author_tv"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:text="@string/button_show" />
 
             <TextView
                 android:id="@+id/url_tv"
@@ -68,6 +57,16 @@
                 android:layout_below="@id/content_tv"
                 android:layout_marginTop="@dimen/margin_medium"
                 android:text="@string/activity_movie_review_url_text" />
+
+            <Button
+                android:id="@+id/toggle_btn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/content_tv"
+                android:background="@drawable/arrow_up"
+                android:rotation="180" />
 
         </RelativeLayout>
 

@@ -1,6 +1,5 @@
 package com.udacity.popularmovies;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -11,6 +10,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
@@ -18,9 +18,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.udacity.popularmovies.model.Review;
 import com.udacity.popularmovies.utilities.NetworkUtils;
@@ -168,7 +168,7 @@ public class ReviewListFragment extends Fragment implements LoaderManager.Loader
         TextView mContentTv;
         @BindView(R.id.author_tv)
         TextView mAuthorTv;
-        @BindView((R.id.buttonToggle))
+        @BindView(R.id.toggle_btn)
         Button mButtonToggle;
         @BindView(R.id.url_tv)
         TextView mUrlTv;
@@ -184,6 +184,26 @@ public class ReviewListFragment extends Fragment implements LoaderManager.Loader
             mAuthorTv.setText(review.getAuthor());
             mContentTv.setText(review.getContent());
 
+            mContentTv.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+
+                    Log.d(TAG, "mContentTv linecount: " + mContentTv.getLineCount());
+                    if (mContentTv.getLineCount() > 3) {
+                        mButtonToggle.setVisibility(View.VISIBLE);
+                        mContentTv.setMaxLines(3);
+                    } else {
+                        mButtonToggle.setVisibility(View.INVISIBLE);
+                    }
+
+                    itemView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                }
+
+            });
+
+
+            //set review url
             String tempString = itemView.getContext().getString(R.string.activity_movie_review_url_text);
             SpannableString content = new SpannableString(tempString);
             content.setSpan(new UnderlineSpan(), 0, tempString.length(), 0);
@@ -193,19 +213,12 @@ public class ReviewListFragment extends Fragment implements LoaderManager.Loader
             mReview = review;
         }
 
-        @OnClick(R.id.buttonToggle)
-        public void showAll(View view) {
 
-            //Toggle
-            if (mContentTv.getMaxLines() == Integer.MAX_VALUE) {
-                mContentTv.setMaxLines(3);
-                mButtonToggle.setText(R.string.button_show);
-            } else {
-                mContentTv.setMaxLines(Integer.MAX_VALUE);
-                mButtonToggle.setText(R.string.button_hide);
-            }
-            //If you want it only one time
-            //  mContentTv.setMaxLines(Integer.MAX_VALUE);
+        @OnClick(R.id.toggle_btn)
+        public void toggleClick(View view) {
+
+            mContentTv.setMaxLines(Integer.MAX_VALUE);
+            mButtonToggle.setVisibility(View.INVISIBLE);
         }
 
         @OnClick(R.id.url_tv)
@@ -221,6 +234,7 @@ public class ReviewListFragment extends Fragment implements LoaderManager.Loader
     private class ReviewAdapter extends RecyclerView.Adapter<ReviewHolder> {
 
         private List<Review> mReviewList;
+
 
         public ReviewAdapter(List<Review> reviewList) {
             mReviewList = reviewList;
