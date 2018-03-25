@@ -12,6 +12,7 @@ import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -33,6 +34,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener, MovieAdapter.MovieAdapterOnClickHandler, LoaderManager.LoaderCallbacks<List<Movie>> {
+
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     public static final String MOST_POPULAR_ORDER_KEY = "p";
     public static final String TOP_RATED_ORDER_KEY = "t";
@@ -67,6 +70,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     private static final int MOVIES_LOADER_ID = 0;
 
     private static String mLanguage;
+
+    private static boolean PREFERENCES_HAVE_BEEN_UPDATED = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,11 +129,21 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                                 Stetho.defaultInspectorModulesProvider(this))
                         .build());
 
-
         setupSharedPreferences();
 
         // Initialize the AsyncTaskLoader
         getSupportLoaderManager().initLoader(MOVIES_LOADER_ID, null, MainActivity.this);
+
+        Log.d(TAG, "onCreate: registering preference changed listener");
+
+        /*
+         * Register MainActivity as an OnPreferenceChangedListener to receive a callback when a
+         * SharedPreference has changed. Please note that we must unregister MainActivity as an
+         * OnSharedPreferenceChanged listener in onDestroy to avoid any memory leaks.
+         */
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .registerOnSharedPreferenceChangeListener(this);
+
 
     }
 
@@ -139,7 +154,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         // Register the listener
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
-
 
     /**
      * This method is overridden by our MainActivity class in order to handle RecyclerView item
@@ -189,26 +203,46 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     @Override
     public Loader<List<Movie>> onCreateLoader(int id, Bundle args) {
-
         mLoadingIndicator.setVisibility(View.VISIBLE);
 
         return new MyAsyncTaskLoader(this);
     }
 
+    // In onStart, if preferences have been changed, refresh the data and set the flag to false
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+    protected void onStart() {
+        super.onStart();
 
-        if (key.equals(getString(R.string.pref_language_key))) {
-            mLanguage = sharedPreferences.getString(key, getResources().getString(R.string.pref_language_default));
-            getSupportLoaderManager().initLoader(MOVIES_LOADER_ID, null, MainActivity.this);
+        if (PREFERENCES_HAVE_BEEN_UPDATED) {
+            Log.d(TAG, "onStart: preferences were updated");
+
+            getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, null, this);
+            PREFERENCES_HAVE_BEEN_UPDATED = false;
         }
     }
 
+    @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Unregister VisualizerActivity as an OnPreferenceChangedListener to avoid any memory leaks.
+
+        /* Unregister MainActivity as an OnPreferenceChangedListener to avoid any memory leaks. */
         PreferenceManager.getDefaultSharedPreferences(this)
                 .unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        /*
+         * Set this flag to true so that when control returns to MainActivity, it can refresh the
+         * data.
+         */
+        PREFERENCES_HAVE_BEEN_UPDATED = true;
+
+        // Set preference values just changed
+        if (key.equals(getString(R.string.pref_language_key))) {
+            mLanguage = sharedPreferences.getString(key, getResources().getString(R.string.pref_language_default));
+        }
+
     }
 
     private static class MyAsyncTaskLoader extends AsyncTaskLoader<List<Movie>> {
@@ -363,21 +397,21 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         switch (id) {
             case R.id.action_sort_order_popular:
                 mSortingType = MOST_POPULAR_ORDER_KEY;
+                invalidateData();
+                getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, null, this);
                 break;
             case R.id.action_sort_order_rated:
                 mSortingType = TOP_RATED_ORDER_KEY;
+                invalidateData();
+                getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, null, this);
                 break;
             case R.id.action_settings:
                 Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
                 startActivity(startSettingsActivity);
                 break;
-            default:
-                return super.onOptionsItemSelected(item);
         }
 
-        invalidateData();
-        getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, null, this);
-        return true;
+        return super.onOptionsItemSelected(item);
 
     }
 

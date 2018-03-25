@@ -50,10 +50,20 @@
                 android:text="@string/activity_movie_review_content_text"
                 android:textSize="@dimen/text_sz_medium" />
 
+            <Button
+                android:id="@+id/buttonToggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/author_tv"
+                android:layout_alignBottom="@+id/author_tv"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:text="@string/button_show" />
+
             <TextView
                 android:id="@+id/url_tv"
                 style="@style/DetailTextStyle"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/content_tv"
                 android:layout_marginTop="@dimen/margin_medium"

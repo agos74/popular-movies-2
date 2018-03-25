@@ -58,6 +58,7 @@
     <string name="pref_language_italian_key">it-IT</string>
     <string name="pref_language_default">en-EN</string>
     <string name="pref_language_key">language</string>
-
+    <string name="button_show">Show</string>
+    <string name="button_hide">Hide</string>
 
 </resources>

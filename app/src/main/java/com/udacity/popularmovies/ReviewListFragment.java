@@ -1,5 +1,6 @@
 package com.udacity.popularmovies;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -17,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,7 +71,7 @@ public class ReviewListFragment extends Fragment implements LoaderManager.Loader
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_review_list, container, false);
         ButterKnife.bind(this, view);
-        LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         mReviewRecyclerView.setLayoutManager(horizontalLayoutManager);
 
         Log.d(TAG, "OnCreateView");
@@ -166,6 +168,8 @@ public class ReviewListFragment extends Fragment implements LoaderManager.Loader
         TextView mContentTv;
         @BindView(R.id.author_tv)
         TextView mAuthorTv;
+        @BindView((R.id.buttonToggle))
+        Button mButtonToggle;
         @BindView(R.id.url_tv)
         TextView mUrlTv;
 
@@ -187,6 +191,21 @@ public class ReviewListFragment extends Fragment implements LoaderManager.Loader
             mUrlTv.setTextColor(itemView.getContext().getResources().getColor(R.color.colorAccent));
 
             mReview = review;
+        }
+
+        @OnClick(R.id.buttonToggle)
+        public void showAll(View view) {
+
+            //Toggle
+            if (mContentTv.getMaxLines() == Integer.MAX_VALUE) {
+                mContentTv.setMaxLines(3);
+                mButtonToggle.setText(R.string.button_show);
+            } else {
+                mContentTv.setMaxLines(Integer.MAX_VALUE);
+                mButtonToggle.setText(R.string.button_hide);
+            }
+            //If you want it only one time
+            //  mContentTv.setMaxLines(Integer.MAX_VALUE);
         }
 
         @OnClick(R.id.url_tv)
