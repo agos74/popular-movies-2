@@ -19,12 +19,14 @@
     <dimen name="padding_extra_large">20dp</dimen>
 
     <dimen name="card_margin">8dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 
     <dimen name="progress_bar_dimens">42dp</dimen>
 
     <dimen name="grid_layout_margin">6dp</dimen>
 
     <dimen name="view_overlay_layout_height">64dp</dimen>
+    <dimen name="button_toggle_size">30dp</dimen>
 
 
 </resources>
