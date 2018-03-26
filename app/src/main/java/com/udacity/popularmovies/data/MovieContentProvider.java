@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import static com.udacity.popularmovies.data.MovieContract.MovieEntry.TABLE_NAME;
 
@@ -66,6 +67,8 @@ public class MovieContentProvider extends ContentProvider {
 
         // Write URI match code and set a variable to return a Cursor
         int match = sUriMatcher.match(uri);
+
+        Log.d("query", "uri: " + uri);
         Cursor retCursor;
 
         // Query for the movies directory and write a default case
@@ -79,6 +82,14 @@ public class MovieContentProvider extends ContentProvider {
                         null,
                         null,
                         sortOrder);
+                break;
+            // Handle the single item case, recognized by the ID included in the URI path
+            case MOVIE_WITH_ID:
+                // Get the movie ID from the URI path
+                String id = uri.getPathSegments().get(1);
+                // Use selections/selectionArgs to filter for this ID
+                String[] selectionArguments = new String[]{id};
+                retCursor = db.query(TABLE_NAME, projection, MovieContract.MovieEntry.COLUMN_MOVIE_ID + " = ?", selectionArguments, null, null, sortOrder);
                 break;
             // Default exception
             default:
@@ -147,7 +158,7 @@ public class MovieContentProvider extends ContentProvider {
                 // Get the movie ID from the URI path
                 String id = uri.getPathSegments().get(1);
                 // Use selections/selectionArgs to filter for this ID
-                moviesDeleted = db.delete(TABLE_NAME, "_id=?", new String[]{id});
+                moviesDeleted = db.delete(TABLE_NAME, MovieContract.MovieEntry.COLUMN_MOVIE_ID + " = ?", new String[]{id});
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);

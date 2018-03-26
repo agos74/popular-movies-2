@@ -1,16 +1,22 @@
 package com.udacity.popularmovies;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,13 +24,18 @@ import android.widget.Toast;
 import com.elmargomez.typer.Font;
 import com.elmargomez.typer.Typer;
 import com.squareup.picasso.Picasso;
+import com.udacity.popularmovies.data.MovieContract;
 import com.udacity.popularmovies.model.Movie;
 import com.udacity.popularmovies.utilities.TheMovieDBJsonUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class DetailActivity extends AppCompatActivity {
+    private static final String TAG = DetailActivity.class.getSimpleName();
+
+    private Movie movie;
 
     //ButterKnife Binding
     @BindView(R.id.toolbar)
@@ -49,6 +60,8 @@ public class DetailActivity extends AppCompatActivity {
     TextView mReviewsTitleTv;
     @BindView(R.id.trailers_title_tv)
     TextView mTrailersTitleTv;
+    @BindView(R.id.favorite_fab)
+    FloatingActionButton mFavoriteFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +75,7 @@ public class DetailActivity extends AppCompatActivity {
             closeOnError();
         }
 
-        Movie movie = intent != null ? (Movie) intent.getParcelableExtra("Movie") : null;
+        movie = intent != null ? (Movie) intent.getParcelableExtra("Movie") : null;
 
         if (movie == null) {
             // Movie data not found in intent
@@ -73,7 +86,7 @@ public class DetailActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        populateUI(movie);
+        populateUI();
 
         //load trailers fragment
         FragmentManager fm = getSupportFragmentManager();
@@ -114,7 +127,7 @@ public class DetailActivity extends AppCompatActivity {
         mTrailersTitleTv.setText(getString(R.string.trailers_label) + " (" + numTrailers + ")");
     }
 
-    private void populateUI(Movie movie) {
+    private void populateUI() {
 
         mCollapsingToolbar.setTitle(movie.getTitle());
 
@@ -158,6 +171,71 @@ public class DetailActivity extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**
+     * onClickFavorite is called when the "Star" button is clicked.
+     * It add or remove favorite movie into the underlying database.
+     */
+    @OnClick(R.id.favorite_fab)
+    public void onClickFavorite(View view) {
+
+        // Insert or remove Favorite Movie via a ContentResolver
+
+        // Check if movie is in favorites list
+        String stringId2 = movie.getId();
+        Uri uri2 = MovieContract.MovieEntry.CONTENT_URI;
+        uri2 = uri2.buildUpon().appendPath(stringId2).build();
+        Cursor retCursor = getContentResolver().query(uri2, null, null, null, null);
+
+        Log.d(TAG, "retCursor: " + retCursor.getCount());
+        boolean delete = retCursor.getCount() > 0;
+
+        if (delete) {
+
+            // Construct the URI for the item to delete
+
+            // Build appropriate uri with String row id appended
+            String stringId = movie.getId();
+            Uri uri = MovieContract.MovieEntry.CONTENT_URI;
+            uri = uri.buildUpon().appendPath(stringId).build();
+
+            // Delete a single row of data using a ContentResolver
+            int movieDeleted = getContentResolver().delete(uri, null, null);
+
+            // Display the URI that's returned with a Toast
+            if (movieDeleted > 0) {
+                Toast.makeText(getBaseContext(), "Movie removed from favorites", Toast.LENGTH_LONG).show();
+            }
+
+        } else {
+
+            // Create new empty ContentValues object
+            ContentValues contentValues = new ContentValues();
+            // Put the movie details into the ContentValues
+            contentValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, movie.getId());
+            contentValues.put(MovieContract.MovieEntry.COLUMN_BACKDROP, movie.getBackdrop());
+            contentValues.put(MovieContract.MovieEntry.COLUMN_ORIGINAL_TITLE, movie.getOriginalTitle());
+            contentValues.put(MovieContract.MovieEntry.COLUMN_POSTER, movie.getPoster());
+            contentValues.put(MovieContract.MovieEntry.COLUMN_TITLE, movie.getTitle());
+            contentValues.put(MovieContract.MovieEntry.COLUMN_PLOT_SYNOPSIS, movie.getPlotSynopsis());
+            contentValues.put(MovieContract.MovieEntry.COLUMN_RATING, movie.getRating());
+            contentValues.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, movie.getReleaseDate());
+
+            // Insert the content values via a ContentResolver
+            Uri uri = getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, contentValues);
+
+            // Display the URI that's returned with a Toast
+            if (uri != null) {
+                Toast.makeText(getBaseContext(), uri.toString(), Toast.LENGTH_LONG).show();
+            }
+        }
+
+        if (delete) {
+            mFavoriteFab.setImageResource(R.drawable.ic_star_outline_24px);
+        } else {
+            mFavoriteFab.setImageResource(R.drawable.ic_star_24px);
         }
     }
 

@@ -45,6 +45,8 @@ public class ReviewListFragment extends Fragment implements LoaderManager.Loader
 
     public static final String REVIEWS_REQUEST_KEY = "r";
 
+    private static final int MAX_TEXT_LINES = 3;
+
     //ButterKnife Binding
     @BindView(R.id.recyclerview_reviews)
     RecyclerView mReviewRecyclerView;
@@ -189,9 +191,9 @@ public class ReviewListFragment extends Fragment implements LoaderManager.Loader
                 public void onGlobalLayout() {
 
                     Log.d(TAG, "mContentTv linecount: " + mContentTv.getLineCount());
-                    if (mContentTv.getLineCount() > 3) {
+                    if (mContentTv.getLineCount() > MAX_TEXT_LINES) {
                         mButtonToggle.setVisibility(View.VISIBLE);
-                        mContentTv.setMaxLines(3);
+                        mContentTv.setMaxLines(MAX_TEXT_LINES);
                     } else {
                         mButtonToggle.setVisibility(View.INVISIBLE);
                     }
@@ -217,8 +219,13 @@ public class ReviewListFragment extends Fragment implements LoaderManager.Loader
         @OnClick(R.id.toggle_btn)
         public void toggleClick(View view) {
 
-            mContentTv.setMaxLines(Integer.MAX_VALUE);
-            mButtonToggle.setVisibility(View.INVISIBLE);
+            if (mContentTv.getMaxLines() == MAX_TEXT_LINES) { //expand
+                mContentTv.setMaxLines(Integer.MAX_VALUE);
+                mButtonToggle.setRotation(0);
+            } else {
+                mContentTv.setMaxLines(MAX_TEXT_LINES); //collapse
+                mButtonToggle.setRotation(180);
+            }
         }
 
         @OnClick(R.id.url_tv)
