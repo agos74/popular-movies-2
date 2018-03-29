@@ -37,11 +37,13 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    public static final String MOST_POPULAR_ORDER_KEY = "p";
-    public static final String TOP_RATED_ORDER_KEY = "t";
+    public static final String MOST_POPULAR_KEY = "p";
+    public static final String TOP_RATED_KEY = "t";
+    public static final String FAVORITES_KEY = "f";
 
     private static final String MOST_POPULAR_TITLE = "Most Popular Movies";
     private static final String TOP_RATED_TITLE = "Highest Rated Movies";
+    private static final String FAVORITES_TITLE = "My Favorites Movies";
 
     //ButterKnife Binding
     @BindView(R.id.recyclerview_main)
@@ -65,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     private static final String SORTING_TYPE_TEXT_KEY = "sorting_type";
 
-    private static String mSortingType = MOST_POPULAR_ORDER_KEY;
+    private static String mMoviesType = MOST_POPULAR_KEY;
 
     private static final int MOVIES_LOADER_ID = 0;
 
@@ -93,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.grid_layout_margin);
         mRecyclerView.addItemDecoration(new GridSpacingItemDecoration(2, spacingInPixels, false, 0));
 
-         /*
+        /*
          * Use this setting to improve performance if you know that changes in content do not
          * change the child layout size in the RecyclerView
          */
@@ -106,10 +108,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         mRecyclerView.setAdapter(mMovieAdapter);
 
 
-        //If savedInstanceState is not null and contains SORTING_TYPE_TEXT_KEY, set mSortingType with the value
+        //If savedInstanceState is not null and contains SORTING_TYPE_TEXT_KEY, set mMoviesType with the value
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(SORTING_TYPE_TEXT_KEY)) {
-                mSortingType = savedInstanceState
+                mMoviesType = savedInstanceState
                         .getString(SORTING_TYPE_TEXT_KEY);
             }
         }
@@ -266,7 +268,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         @Override
         public List<Movie> loadInBackground() {
 
-            String orderType = mSortingType;
+            String orderType = mMoviesType;
             String language = mLanguage;
             URL moviesRequestUrl = NetworkUtils.buildUrlWithSortingType(orderType, language);
 
@@ -328,12 +330,15 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         //Set Activity Title
         String title;
-        switch (mSortingType) {
-            case MainActivity.MOST_POPULAR_ORDER_KEY:
+        switch (mMoviesType) {
+            case MainActivity.MOST_POPULAR_KEY:
                 title = MOST_POPULAR_TITLE;
                 break;
-            case MainActivity.TOP_RATED_ORDER_KEY:
+            case MainActivity.TOP_RATED_KEY:
                 title = TOP_RATED_TITLE;
+                break;
+            case MainActivity.FAVORITES_KEY:
+                title = FAVORITES_TITLE;
                 break;
             default:
                 title = getString(R.string.app_name);
@@ -362,7 +367,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         //Put the order type in the outState bundle
-        outState.putString(SORTING_TYPE_TEXT_KEY, mSortingType);
+        outState.putString(SORTING_TYPE_TEXT_KEY, mMoviesType);
 
     }
 
@@ -379,12 +384,15 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        switch (mSortingType) {
-            case MOST_POPULAR_ORDER_KEY:
+        switch (mMoviesType) {
+            case MOST_POPULAR_KEY:
                 menu.findItem(R.id.action_sort_order_popular).setChecked(true);
                 break;
-            case TOP_RATED_ORDER_KEY:
+            case TOP_RATED_KEY:
                 menu.findItem(R.id.action_sort_order_rated).setChecked(true);
+                break;
+            case FAVORITES_KEY:
+                menu.findItem(R.id.action_favorites).setChecked(true);
                 break;
         }
         return true;
@@ -396,12 +404,17 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         switch (id) {
             case R.id.action_sort_order_popular:
-                mSortingType = MOST_POPULAR_ORDER_KEY;
+                mMoviesType = MOST_POPULAR_KEY;
                 invalidateData();
                 getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, null, this);
                 break;
             case R.id.action_sort_order_rated:
-                mSortingType = TOP_RATED_ORDER_KEY;
+                mMoviesType = TOP_RATED_KEY;
+                invalidateData();
+                getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, null, this);
+                break;
+            case R.id.action_favorites:
+                mMoviesType = FAVORITES_KEY;
                 invalidateData();
                 getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, null, this);
                 break;

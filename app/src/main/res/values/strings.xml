@@ -60,5 +60,6 @@
     <string name="pref_language_key">language</string>
     <string name="button_show">Show</string>
     <string name="button_hide">Hide</string>
+    <string name="action_favorites">My Favorites</string>
 
 </resources>

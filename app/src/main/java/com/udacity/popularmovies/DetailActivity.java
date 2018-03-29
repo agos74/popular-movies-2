@@ -154,6 +154,13 @@ public class DetailActivity extends AppCompatActivity {
         mRatingTv.setText(rating);
         mPlotSynopsisTv.setText(movie.getPlotSynopsis());
 
+        boolean isFavorite = isFavorite(movie.getId());
+
+        if (isFavorite) {
+            // Set star full icon
+            mFavoriteFab.setImageResource(R.drawable.ic_star_24px);
+        }
+
     }
 
     private void closeOnError() {
@@ -180,21 +187,12 @@ public class DetailActivity extends AppCompatActivity {
      */
     @OnClick(R.id.favorite_fab)
     public void onClickFavorite(View view) {
-
         // Insert or remove Favorite Movie via a ContentResolver
 
-        // Check if movie is in favorites list
-        String stringId2 = movie.getId();
-        Uri uri2 = MovieContract.MovieEntry.CONTENT_URI;
-        uri2 = uri2.buildUpon().appendPath(stringId2).build();
-        Cursor retCursor = getContentResolver().query(uri2, null, null, null, null);
+        // Check if movie is in the favorites list
+        boolean isFavorite = isFavorite(movie.getId());
 
-        Log.d(TAG, "retCursor: " + retCursor.getCount());
-        boolean delete = retCursor.getCount() > 0;
-
-        if (delete) {
-
-            // Construct the URI for the item to delete
+        if (isFavorite) { //Delete favorite
 
             // Build appropriate uri with String row id appended
             String stringId = movie.getId();
@@ -204,12 +202,14 @@ public class DetailActivity extends AppCompatActivity {
             // Delete a single row of data using a ContentResolver
             int movieDeleted = getContentResolver().delete(uri, null, null);
 
-            // Display the URI that's returned with a Toast
             if (movieDeleted > 0) {
                 Toast.makeText(getBaseContext(), "Movie removed from favorites", Toast.LENGTH_LONG).show();
             }
 
-        } else {
+            // Set star outline icon
+            mFavoriteFab.setImageResource(R.drawable.ic_star_outline_24px);
+
+        } else { // Add favorite
 
             // Create new empty ContentValues object
             ContentValues contentValues = new ContentValues();
@@ -224,19 +224,29 @@ public class DetailActivity extends AppCompatActivity {
             contentValues.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, movie.getReleaseDate());
 
             // Insert the content values via a ContentResolver
-            Uri uri = getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, contentValues);
+            Uri uriAdded = getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, contentValues);
 
-            // Display the URI that's returned with a Toast
-            if (uri != null) {
-                Toast.makeText(getBaseContext(), uri.toString(), Toast.LENGTH_LONG).show();
+            if (uriAdded != null) {
+                Toast.makeText(getBaseContext(), "Movie added to favorites", Toast.LENGTH_LONG).show();
             }
-        }
 
-        if (delete) {
-            mFavoriteFab.setImageResource(R.drawable.ic_star_outline_24px);
-        } else {
+            // Set star full icon
             mFavoriteFab.setImageResource(R.drawable.ic_star_24px);
         }
+
     }
 
+    // Check if movie with movieId is in the favorites list
+    private boolean isFavorite(String movieId) {
+
+        // Build appropriate uri with String row id appended
+        Uri uri = MovieContract.MovieEntry.CONTENT_URI;
+        uri = uri.buildUpon().appendPath(movieId).build();
+
+        Cursor retCursor = getContentResolver().query(uri, null, null, null, null);
+
+        boolean isFavorite = retCursor.getCount() > 0;
+
+        return isFavorite;
+    }
 }

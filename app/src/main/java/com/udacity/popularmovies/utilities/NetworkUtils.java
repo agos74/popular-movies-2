@@ -7,7 +7,6 @@ package com.udacity.popularmovies.utilities;
 import android.net.Uri;
 
 import com.udacity.popularmovies.BuildConfig;
-import com.udacity.popularmovies.DetailActivity;
 import com.udacity.popularmovies.MainActivity;
 import com.udacity.popularmovies.ReviewListFragment;
 import com.udacity.popularmovies.TrailerListFragment;
@@ -50,10 +49,10 @@ public class NetworkUtils {
     public static URL buildUrlWithSortingType(String sortingType, String language) {
         String endPoint;
         switch (sortingType) {
-            case MainActivity.MOST_POPULAR_ORDER_KEY:
+            case MainActivity.MOST_POPULAR_KEY:
                 endPoint = POPULAR_ENDPOINT;
                 break;
-            case MainActivity.TOP_RATED_ORDER_KEY:
+            case MainActivity.TOP_RATED_KEY:
                 endPoint = TOP_RATED_ENDPOINT;
                 break;
             default:
