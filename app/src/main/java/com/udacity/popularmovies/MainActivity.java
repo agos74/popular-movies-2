@@ -3,6 +3,7 @@ package com.udacity.popularmovies;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -22,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.facebook.stetho.Stetho;
+import com.udacity.popularmovies.data.MovieContract;
 import com.udacity.popularmovies.model.Movie;
 import com.udacity.popularmovies.utilities.GridSpacingItemDecoration;
 import com.udacity.popularmovies.utilities.NetworkUtils;
@@ -33,7 +35,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener, MovieAdapter.MovieAdapterOnClickHandler, LoaderManager.LoaderCallbacks<List<Movie>> {
+public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener, MovieAdapter.MovieAdapterOnClickHandler {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -71,6 +73,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     private static final int MOVIES_LOADER_ID = 0;
 
+    private static final int FAVORITES_LOADER_ID = 1;
+
     private static String mLanguage;
 
     private static boolean PREFERENCES_HAVE_BEEN_UPDATED = false;
@@ -102,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         mRecyclerView.setHasFixedSize(true);
 
         // set mMovieAdapter equal to a new MovieAdapter
-        mMovieAdapter = new MovieAdapter(this);
+        mMovieAdapter = new MovieAdapter(this, MainActivity.this, mMoviesType);
 
         /* attaches adapter to the RecyclerView in layout. */
         mRecyclerView.setAdapter(mMovieAdapter);
@@ -118,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         mRetryButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, null, MainActivity.this);
+                getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, null, moviesLoaderListener);
             }
         });
 
@@ -134,7 +138,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         setupSharedPreferences();
 
         // Initialize the AsyncTaskLoader
-        getSupportLoaderManager().initLoader(MOVIES_LOADER_ID, null, MainActivity.this);
+        getSupportLoaderManager().initLoader(MOVIES_LOADER_ID, null, moviesLoaderListener);
+        getSupportLoaderManager().initLoader(FAVORITES_LOADER_ID, null, favoritesLoaderListener);
 
         Log.d(TAG, "onCreate: registering preference changed listener");
 
@@ -203,12 +208,62 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         mErrorLayout.setVisibility(View.VISIBLE);
     }
 
-    @Override
-    public Loader<List<Movie>> onCreateLoader(int id, Bundle args) {
-        mLoadingIndicator.setVisibility(View.VISIBLE);
+    private LoaderManager.LoaderCallbacks<List<Movie>> moviesLoaderListener = new LoaderManager.LoaderCallbacks<List<Movie>>() {
+        @Override
+        public Loader<List<Movie>> onCreateLoader(int id, Bundle args) {
+            mLoadingIndicator.setVisibility(View.VISIBLE);
 
-        return new MyAsyncTaskLoader(this);
-    }
+            return new MyAsyncTaskLoader(getBaseContext());
+        }
+
+        @Override
+        public void onLoadFinished(Loader<List<Movie>> loader, List<Movie> moviesList) {
+            mLoadingIndicator.setVisibility(View.INVISIBLE);
+            if (moviesList != null) {
+                showMoviesDataView();
+                // Instead of iterating through every movie, use mMovieAdapter.setMoviesList and pass in the movies List
+                mMovieAdapter.setMoviesList(moviesList);
+            } else {
+                showErrorMessage();
+            }
+
+            setActivityTitle();
+
+        }
+
+        @Override
+        public void onLoaderReset(Loader<List<Movie>> loader) {
+
+        }
+    };
+
+    private LoaderManager.LoaderCallbacks<Cursor> favoritesLoaderListener
+            = new LoaderManager.LoaderCallbacks<Cursor>() {
+        @Override
+        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+            mLoadingIndicator.setVisibility(View.VISIBLE);
+
+            return new MyFavoritesAsyncTaskLoader(getBaseContext());
+        }
+
+        @Override
+        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+            mLoadingIndicator.setVisibility(View.INVISIBLE);
+
+            Log.d(TAG, "onLoadFinished Favorites: " + data.getCount());
+
+            showMoviesDataView();
+            // Update the data that the adapter uses to create ViewHolders
+            mMovieAdapter.swapCursor(data);
+
+            setActivityTitle();
+        }
+
+        @Override
+        public void onLoaderReset(Loader<Cursor> loader) {
+            mMovieAdapter.swapCursor(null);
+        }
+    };
 
     // In onStart, if preferences have been changed, refresh the data and set the flag to false
     @Override
@@ -218,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         if (PREFERENCES_HAVE_BEEN_UPDATED) {
             Log.d(TAG, "onStart: preferences were updated");
 
-            getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, null, this);
+            getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, null, moviesLoaderListener);
             PREFERENCES_HAVE_BEEN_UPDATED = false;
         }
     }
@@ -297,23 +352,60 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     }
 
 
-    @Override
-    public void onLoadFinished(Loader<List<Movie>> loader, List<Movie> moviesList) {
-        mLoadingIndicator.setVisibility(View.INVISIBLE);
-        if (moviesList != null) {
-            showMoviesDataView();
-            // Instead of iterating through every movie, use mMovieAdapter.setMoviesList and pass in the movies List
-            mMovieAdapter.setMoviesList(moviesList);
-        } else {
-            showErrorMessage();
+    private static class MyFavoritesAsyncTaskLoader extends AsyncTaskLoader<Cursor> {
+        public MyFavoritesAsyncTaskLoader(Context baseContext) {
+            super(baseContext);
         }
 
-        setActivityTitle();
+        // Initialize a Cursor, this will hold all the favorites data
+        Cursor mMovieData = null;
 
-    }
+        // onStartLoading() is called when a loader first starts loading data
+        @Override
+        protected void onStartLoading() {
+            Log.d(TAG, "onStartLoading");
 
-    @Override
-    public void onLoaderReset(Loader<List<Movie>> loader) {
+            if (mMovieData != null) {
+                // Delivers any previously loaded data immediately
+                deliverResult(mMovieData);
+            } else {
+                // Force a new load
+                forceLoad();
+            }
+        }
+
+        // loadInBackground() performs asynchronous loading of data
+        @Override
+        public Cursor loadInBackground() {
+            // Will implement to load data
+
+            Log.d(TAG, "loadInBackground");
+
+            // Query and load all movie data in the background;
+            // [Hint] use a try/catch block to catch any errors in loading data
+
+            try {
+                return getContext().getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI,
+                        null,
+                        null,
+                        null,
+                        null);
+
+            } catch (Exception e) {
+                Log.e(TAG, "Failed to asynchronously load data.");
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        // deliverResult sends the result of the load, a Cursor, to the registered listener
+        public void deliverResult(Cursor data) {
+            Log.d(TAG, "deliveryResult: " + data.getCount());
+
+            mMovieData = data;
+            super.deliverResult(data);
+        }
+
 
     }
 
@@ -324,6 +416,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     private void invalidateData() {
         mMovieAdapter.setMoviesList(null);
+        mMovieAdapter.setCursor(null);
     }
 
     private void setActivityTitle() {
@@ -405,18 +498,41 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         switch (id) {
             case R.id.action_sort_order_popular:
                 mMoviesType = MOST_POPULAR_KEY;
+
+                // set mMovieAdapter equal to a new MovieAdapter
+                mMovieAdapter = new MovieAdapter(this, MainActivity.this, mMoviesType);
+
+                /* attaches adapter to the RecyclerView in layout. */
+                mRecyclerView.setAdapter(mMovieAdapter);
+
                 invalidateData();
-                getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, null, this);
+                getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, null, moviesLoaderListener);
                 break;
             case R.id.action_sort_order_rated:
                 mMoviesType = TOP_RATED_KEY;
+
+                // set mMovieAdapter equal to a new MovieAdapter
+                mMovieAdapter = new MovieAdapter(this, MainActivity.this, mMoviesType);
+
+                /* attaches adapter to the RecyclerView in layout. */
+                mRecyclerView.setAdapter(mMovieAdapter);
+
                 invalidateData();
-                getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, null, this);
+                getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, null, moviesLoaderListener);
                 break;
             case R.id.action_favorites:
                 mMoviesType = FAVORITES_KEY;
+
+                // set mMovieAdapter equal to a new MovieAdapter
+                mMovieAdapter = new MovieAdapter(this, MainActivity.this, mMoviesType);
+
+                /* attaches adapter to the RecyclerView in layout. */
+                mRecyclerView.setAdapter(mMovieAdapter);
+
+                Log.d(TAG, "OnOptionsItemSelected: " + mMoviesType);
+
                 invalidateData();
-                getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, null, this);
+                getSupportLoaderManager().restartLoader(FAVORITES_LOADER_ID, null, favoritesLoaderListener);
                 break;
             case R.id.action_settings:
                 Intent startSettingsActivity = new Intent(this, SettingsActivity.class);

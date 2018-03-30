@@ -99,6 +99,8 @@ public class MovieContentProvider extends ContentProvider {
         // Set a notification URI on the Cursor and return that Cursor
         retCursor.setNotificationUri(getContext().getContentResolver(), uri);
 
+        Log.d("query favorites", String.valueOf(retCursor.getCount()));
+
         // Return the desired Cursor
         return retCursor;
     }

@@ -203,7 +203,7 @@ public class DetailActivity extends AppCompatActivity {
             int movieDeleted = getContentResolver().delete(uri, null, null);
 
             if (movieDeleted > 0) {
-                Toast.makeText(getBaseContext(), "Movie removed from favorites", Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(), "Movie removed from favorites", Toast.LENGTH_SHORT).show();
             }
 
             // Set star outline icon
@@ -227,7 +227,7 @@ public class DetailActivity extends AppCompatActivity {
             Uri uriAdded = getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, contentValues);
 
             if (uriAdded != null) {
-                Toast.makeText(getBaseContext(), "Movie added to favorites", Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(), "Movie added to favorites", Toast.LENGTH_SHORT).show();
             }
 
             // Set star full icon

@@ -1,18 +1,20 @@
 package com.udacity.popularmovies;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
+import com.udacity.popularmovies.data.MovieContract;
 import com.udacity.popularmovies.model.Movie;
 import com.udacity.popularmovies.utilities.TheMovieDBJsonUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -24,14 +26,47 @@ import butterknife.ButterKnife;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterViewHolder> {
 
+    private static final String TAG = MovieAdapter.class.getSimpleName();
+
 
     private List<Movie> mMoviesList;
+
+    // Class variables for the Cursor that holds task data and the Context
+    private Cursor mCursor;
+    private Context mContext;
+    private String mMoviesType;
 
     /**
      * An on-click handler that we've defined to make it easy for an Activity to interface with
      * our RecyclerView
      */
     private final MovieAdapterOnClickHandler mClickHandler;
+
+    /**
+     * When data changes and a re-query occurs, this function swaps the old Cursor
+     * with a newly updated Cursor (Cursor c) that is passed in.
+     */
+    public Cursor swapCursor(Cursor c) {
+        if (c != null) {
+            Log.d(TAG, "swapCursor: " + c.getCount());
+        } else {
+            Log.d(TAG, "swapCursor: null");
+        }
+
+        // check if this cursor is the same as the previous cursor (mCursor)
+        if (mCursor == c) {
+            return null; // bc nothing has changed
+        }
+        Cursor temp = mCursor;
+        this.mCursor = c; // new cursor value assigned
+
+        //check if this is a valid cursor, then update the cursor
+        if (c != null) {
+            notifyDataSetChanged();
+        }
+        return temp;
+    }
+
 
     /**
      * The interface that receives onClick messages.
@@ -46,8 +81,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
      * @param clickHandler The on-click handler for this adapter. This single handler is called
      *                     when an item is clicked.
      */
-    public MovieAdapter(MovieAdapterOnClickHandler clickHandler) {
+    public MovieAdapter(MovieAdapterOnClickHandler clickHandler, Context mContext, String mMoviesType) {
         mClickHandler = clickHandler;
+        this.mContext = mContext;
+        this.mMoviesType = mMoviesType;
+
+        Log.d(TAG, "MovieAdapter constructor: " + mMoviesType);
+
     }
 
     /**
@@ -71,7 +111,36 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         @Override
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
-            Movie movie = mMoviesList.get(adapterPosition);
+            Movie movie = new Movie();
+            if (mMoviesType.equals(MainActivity.FAVORITES_KEY)) {
+
+                // Indices for movie fields
+                int movieIdIndex = mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_ID);
+                int titleIndex = mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE);
+                int originalTitleIndex = mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_ORIGINAL_TITLE);
+                int posterIndex = mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_POSTER);
+                int releaseDateIndex = mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RELEASE_DATE);
+                int ratingIndex = mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RATING);
+                int plotSynopsisIndex = mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_PLOT_SYNOPSIS);
+                int backdropIndex = mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_BACKDROP);
+
+                // Move cursor to position
+                mCursor.moveToPosition(adapterPosition);
+
+                // Determine the values of the wanted data
+                movie.setId(mCursor.getString(movieIdIndex));
+                movie.setTitle(mCursor.getString(titleIndex));
+                movie.setOriginalTitle(mCursor.getString(originalTitleIndex));
+                movie.setPoster(mCursor.getString(posterIndex));
+                movie.setReleaseDate(mCursor.getString(releaseDateIndex));
+                movie.setRating(mCursor.getString(ratingIndex));
+                movie.setPlotSynopsis(mCursor.getString(plotSynopsisIndex));
+                movie.setBackdrop(mCursor.getString(backdropIndex));
+
+            } else {
+                movie = mMoviesList.get(adapterPosition);
+            }
+
             mClickHandler.onClick(movie);
         }
     }
@@ -84,9 +153,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
      */
     @Override
     public MovieAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
+
+        Log.d(TAG, "onCreateViewHolder mMoviesType: " + mMoviesType);
+
         int layoutIdForListItem = R.layout.movie_grid_item;
-        LayoutInflater inflater = LayoutInflater.from(context);
+        LayoutInflater inflater = LayoutInflater.from(mContext);
 
         View view = inflater.inflate(layoutIdForListItem, parent, false);
         return new MovieAdapterViewHolder(view);
@@ -100,11 +171,32 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
      */
     @Override
     public void onBindViewHolder(MovieAdapterViewHolder holder, int position) {
-        Movie movieForThisPosition = mMoviesList.get(position);
+        Log.d(TAG, "onBindViewHolder position: " + String.valueOf(position));
+
+        String poster;
+        String title;
+
+        if (mMoviesType.equals(MainActivity.FAVORITES_KEY)) {
+
+            // Indices for the poster and title column
+            int posterIndex = mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_POSTER);
+            int titleIndex = mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE);
+
+            mCursor.moveToPosition(position); // get to the right location in the cursor
+
+            // Determine the values of the wanted data
+            poster = mCursor.getString(posterIndex);
+            title = mCursor.getString(titleIndex);
+        } else {
+
+            Movie movieForThisPosition = mMoviesList.get(position);
+            poster = movieForThisPosition.getPoster();
+            title = movieForThisPosition.getTitle();
+        }
 
         Uri imgUri = Uri.parse(TheMovieDBJsonUtils.TMDB_IMAGE_PATH).buildUpon()
                 .appendEncodedPath(TheMovieDBJsonUtils.TMDB_IMAGE_WIDTH_MEDIUM)
-                .appendEncodedPath(movieForThisPosition.getPoster())
+                .appendEncodedPath(poster)
                 .build();
 
         Picasso
@@ -114,12 +206,18 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 //                .placeholder(R.drawable.progress_animation)
                 .into(holder.mMovieImageView);
 
-        holder.mMovieImageView.setContentDescription(movieForThisPosition.getTitle());
+        holder.mMovieImageView.setContentDescription(title);
     }
 
     @Override
     public int getItemCount() {
-        return (mMoviesList == null) ? 0 : mMoviesList.size();
+        Log.d(TAG, "getItemCount: " + mMoviesType);
+
+        if (mMoviesType.equals(MainActivity.FAVORITES_KEY)) {
+            return (mCursor == null) ? 0 : mCursor.getCount();
+        } else {
+            return (mMoviesList == null) ? 0 : mMoviesList.size();
+        }
     }
 
     /**
@@ -132,6 +230,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     public void setMoviesList(List<Movie> moviesList) {
         mMoviesList = moviesList;
         notifyDataSetChanged();
+    }
+
+    public void setCursor(Cursor cursor) {
+        this.mCursor = cursor;
     }
 
 
