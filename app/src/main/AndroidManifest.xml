@@ -6,6 +6,9 @@
     <!-- This permission is necessary in order for Popular Movies to perform network access. -->
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- This permission is necessary in order for Popular Movies to verify network access. -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_descriptor"

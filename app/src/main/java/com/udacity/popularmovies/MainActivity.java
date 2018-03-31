@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.facebook.stetho.Stetho;
 import com.udacity.popularmovies.data.MovieContract;
@@ -54,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     /* This Layout with TextView and Button is used to display errors and will be hidden if there are no errors */
     @BindView(R.id.layout_error)
     LinearLayout mErrorLayout;
+    @BindView(R.id.error_message_tv)
+    TextView mErrorMessageTv;
 
     /*
      * The ProgressBar that will indicate to the user that we are loading data. It will be
@@ -67,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     private MovieAdapter mMovieAdapter;
 
-    private static final String SORTING_TYPE_TEXT_KEY = "sorting_type";
+    private static final String MOVIES_TYPE_TEXT_KEY = "movies_type";
 
     private static String mMoviesType = MOST_POPULAR_KEY;
 
@@ -100,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         mRecyclerView.addItemDecoration(new GridSpacingItemDecoration(2, spacingInPixels, false, 0));
 
         /*
-         * Use this setting to improve performance if you know that changes in content do not
+         * Use this setting to improve performance because we know that changes in content do not
          * change the child layout size in the RecyclerView
          */
         mRecyclerView.setHasFixedSize(true);
@@ -112,17 +115,21 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         mRecyclerView.setAdapter(mMovieAdapter);
 
 
-        //If savedInstanceState is not null and contains SORTING_TYPE_TEXT_KEY, set mMoviesType with the value
+        // If savedInstanceState is not null and contains MOVIES_TYPE_TEXT_KEY, set mMoviesType with the value
         if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey(SORTING_TYPE_TEXT_KEY)) {
+            if (savedInstanceState.containsKey(MOVIES_TYPE_TEXT_KEY)) {
                 mMoviesType = savedInstanceState
-                        .getString(SORTING_TYPE_TEXT_KEY);
+                        .getString(MOVIES_TYPE_TEXT_KEY);
             }
         }
 
         mRetryButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, null, moviesLoaderListener);
+                if (!NetworkUtils.isConnected(getBaseContext())) {
+                    showErrorMessage(getBaseContext().getResources().getString(R.string.network_error_message));
+                } else {
+                    getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, null, moviesLoaderListener);
+                }
             }
         });
 
@@ -137,16 +144,20 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         setupSharedPreferences();
 
-        // Initialize the AsyncTaskLoader
-        getSupportLoaderManager().initLoader(MOVIES_LOADER_ID, null, moviesLoaderListener);
-        getSupportLoaderManager().initLoader(FAVORITES_LOADER_ID, null, favoritesLoaderListener);
+        if (!NetworkUtils.isConnected(getBaseContext())) {
+            showErrorMessage(getBaseContext().getResources().getString(R.string.network_error_message));
+        } else {
+            // Initialize the AsyncTaskLoaders
+            getSupportLoaderManager().initLoader(MOVIES_LOADER_ID, null, moviesLoaderListener);
+            getSupportLoaderManager().initLoader(FAVORITES_LOADER_ID, null, favoritesLoaderListener);
+        }
+
 
         Log.d(TAG, "onCreate: registering preference changed listener");
 
         /*
          * Register MainActivity as an OnPreferenceChangedListener to receive a callback when a
-         * SharedPreference has changed. Please note that we must unregister MainActivity as an
-         * OnSharedPreferenceChanged listener in onDestroy to avoid any memory leaks.
+         * SharedPreference has changed.
          */
         PreferenceManager.getDefaultSharedPreferences(this)
                 .registerOnSharedPreferenceChangeListener(this);
@@ -199,18 +210,22 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
      * <p>
      * Since it is okay to redundantly set the visibility of a View, we don't
      * need to check whether each view is currently visible or invisible.
+     *
+     * @param errorMessage
      */
-    private void showErrorMessage() {
+    private void showErrorMessage(String errorMessage) {
         // Hide mRecyclerView, not mMovieImageView
         /* First, hide the currently visible data */
         mRecyclerView.setVisibility(View.INVISIBLE);
         /* Then, show the error */
+        mErrorMessageTv.setText(errorMessage);
         mErrorLayout.setVisibility(View.VISIBLE);
     }
 
     private LoaderManager.LoaderCallbacks<List<Movie>> moviesLoaderListener = new LoaderManager.LoaderCallbacks<List<Movie>>() {
         @Override
         public Loader<List<Movie>> onCreateLoader(int id, Bundle args) {
+
             mLoadingIndicator.setVisibility(View.VISIBLE);
 
             return new MyAsyncTaskLoader(getBaseContext());
@@ -221,13 +236,11 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             mLoadingIndicator.setVisibility(View.INVISIBLE);
             if (moviesList != null) {
                 showMoviesDataView();
-                // Instead of iterating through every movie, use mMovieAdapter.setMoviesList and pass in the movies List
+                // Set the movies List to Adapter
                 mMovieAdapter.setMoviesList(moviesList);
             } else {
-                showErrorMessage();
+                showErrorMessage(getBaseContext().getResources().getString(R.string.http_api_unauthorized_error_message));
             }
-
-            setActivityTitle();
 
         }
 
@@ -256,7 +269,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             // Update the data that the adapter uses to create ViewHolders
             mMovieAdapter.swapCursor(data);
 
-            setActivityTitle();
         }
 
         @Override
@@ -273,7 +285,11 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         if (PREFERENCES_HAVE_BEEN_UPDATED) {
             Log.d(TAG, "onStart: preferences were updated");
 
-            getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, null, moviesLoaderListener);
+            if (!NetworkUtils.isConnected(getBaseContext())) {
+                showErrorMessage(getBaseContext().getResources().getString(R.string.network_error_message));
+            } else {
+                getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, null, moviesLoaderListener);
+            }
             PREFERENCES_HAVE_BEEN_UPDATED = false;
         }
     }
@@ -382,7 +398,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             Log.d(TAG, "loadInBackground");
 
             // Query and load all movie data in the background;
-            // [Hint] use a try/catch block to catch any errors in loading data
 
             try {
                 return getContext().getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI,
@@ -416,7 +431,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     private void invalidateData() {
         mMovieAdapter.setMoviesList(null);
-        mMovieAdapter.setCursor(null);
+        mMovieAdapter.swapCursor(null);
     }
 
     private void setActivityTitle() {
@@ -460,7 +475,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         //Put the order type in the outState bundle
-        outState.putString(SORTING_TYPE_TEXT_KEY, mMoviesType);
+        outState.putString(MOVIES_TYPE_TEXT_KEY, mMoviesType);
 
     }
 
@@ -506,7 +521,11 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 mRecyclerView.setAdapter(mMovieAdapter);
 
                 invalidateData();
-                getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, null, moviesLoaderListener);
+                if (!NetworkUtils.isConnected(getBaseContext())) {
+                    showErrorMessage(getBaseContext().getResources().getString(R.string.network_error_message));
+                } else {
+                    getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, null, moviesLoaderListener);
+                }
                 break;
             case R.id.action_sort_order_rated:
                 mMoviesType = TOP_RATED_KEY;
@@ -518,7 +537,12 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 mRecyclerView.setAdapter(mMovieAdapter);
 
                 invalidateData();
-                getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, null, moviesLoaderListener);
+
+                if (!NetworkUtils.isConnected(getBaseContext())) {
+                    showErrorMessage(getBaseContext().getResources().getString(R.string.network_error_message));
+                } else {
+                    getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, null, moviesLoaderListener);
+                }
                 break;
             case R.id.action_favorites:
                 mMoviesType = FAVORITES_KEY;
@@ -539,6 +563,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 startActivity(startSettingsActivity);
                 break;
         }
+
+        setActivityTitle();
 
         return super.onOptionsItemSelected(item);
 

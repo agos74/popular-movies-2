@@ -1,8 +1,13 @@
 package com.udacity.popularmovies.utilities;
 
 
+import android.app.Application;
+import android.content.Context;
+import android.content.res.Resources;
 import android.util.Log;
 
+import com.udacity.popularmovies.MainActivity;
+import com.udacity.popularmovies.R;
 import com.udacity.popularmovies.model.Movie;
 import com.udacity.popularmovies.model.Review;
 import com.udacity.popularmovies.model.Video;
@@ -32,6 +37,8 @@ public class TheMovieDBJsonUtils {
 
     public static final String TMDB_TYPE_TRAILER_KEY = "Trailer";
 
+    public static final String TMDB_SITE_YOUTUBE_KEY = "Youtube";
+
     public static List<Movie> parseMoviesJson(String moviesJsonStr) throws JSONException {
 
         /* Movies information. Each movie is an element of the "results" array */
@@ -54,7 +61,6 @@ public class TheMovieDBJsonUtils {
         /* Is there an error? */
         if (moviesJson.has(TMDB_MESSAGE_CODE)) {
             int errorCode = moviesJson.getInt(TMDB_MESSAGE_CODE);
-
             switch (errorCode) {
                 case HttpURLConnection.HTTP_OK:
                     break;
@@ -121,7 +127,7 @@ public class TheMovieDBJsonUtils {
         return moviesList;
     }
 
-    public static List<Video> parseVideosJson(String videosJsonStr, boolean onlyTrailers) throws JSONException {
+    public static List<Video> parseVideosJson(String videosJsonStr, boolean onlyTrailers, boolean onlyYoutube) throws JSONException {
 
         /* Videos information. Each video is an element of the "results" array */
 
@@ -185,12 +191,23 @@ public class TheMovieDBJsonUtils {
                 video.setSite(videoJson.optString(TMDB_SITE));
             }
 
+            boolean toAdd = true;
+
             //get only "Trailer" type?
             if (onlyTrailers) {
-                if (video.getType().equals(TMDB_TYPE_TRAILER_KEY)) {
-                    videoList.add(video);
+                if (!video.getType().equals(TMDB_TYPE_TRAILER_KEY)) {
+                    toAdd = false;
                 }
-            } else {
+            }
+
+            //get only "Youtube" site?
+            if (toAdd && onlyYoutube) {
+                if (!video.getSite().equals(TMDB_SITE_YOUTUBE_KEY)) {
+                    toAdd = false;
+                }
+            }
+
+            if (toAdd) {
                 videoList.add(video);
             }
 

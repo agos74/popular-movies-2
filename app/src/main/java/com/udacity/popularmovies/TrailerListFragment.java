@@ -118,7 +118,7 @@ public class TrailerListFragment extends Fragment implements LoaderManager.Loade
 
         @Override
         protected void onStartLoading() {
-            Log.d(TAG, "MyAsyncTask: OnStartLoading:videos=" + (mVideoList == null ? 0 : mVideoList.size()));
+            Log.d(TAG, "MyAsyncTask: OnStartLoading - videos=" + (mVideoList == null ? 0 : mVideoList.size()));
             if (mVideoList != null) {
                 deliverResult(mVideoList);
             } else {
@@ -137,7 +137,7 @@ public class TrailerListFragment extends Fragment implements LoaderManager.Loade
                 String jsonVideosResponse = NetworkUtils
                         .getResponseFromHttpUrl(videosRequestUrl);
 
-                return TheMovieDBJsonUtils.parseVideosJson(jsonVideosResponse, true);
+                return TheMovieDBJsonUtils.parseVideosJson(jsonVideosResponse, true, true); //get only trailers from youtube
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -151,7 +151,7 @@ public class TrailerListFragment extends Fragment implements LoaderManager.Loade
          * @param videoList The result of the load
          */
         public void deliverResult(List<Video> videoList) {
-            Log.d(TAG, "MyAsyncTask: deliverResult:videos=" + (videoList == null ? 0 : videoList.size()));
+            Log.d(TAG, "MyAsyncTask: deliverResult - videos=" + (videoList == null ? 0 : videoList.size()));
 
             mVideoList = videoList;
             super.deliverResult(videoList);

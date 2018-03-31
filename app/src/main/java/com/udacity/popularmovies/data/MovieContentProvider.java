@@ -38,7 +38,7 @@ public class MovieContentProvider extends ContentProvider {
         /*
           All paths added to the UriMatcher have a corresponding int.
           For each kind of uri you may want to access, add the corresponding match with addURI.
-          The two calls below add matches for the task directory and a single item by ID.
+          The two calls below add matches for the movies directory and a single item by ID.
          */
         uriMatcher.addURI(MovieContract.AUTHORITY, MovieContract.PATH_MOVIES, MOVIES);
         uriMatcher.addURI(MovieContract.AUTHORITY, MovieContract.PATH_MOVIES + "/#", MOVIE_WITH_ID);
@@ -73,7 +73,7 @@ public class MovieContentProvider extends ContentProvider {
 
         // Query for the movies directory and write a default case
         switch (match) {
-            // Query for the tasks directory
+            // Query for the movies directory
             case MOVIES:
                 retCursor = db.query(TABLE_NAME,
                         projection,

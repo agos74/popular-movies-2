@@ -4,6 +4,9 @@ package com.udacity.popularmovies.utilities;
   Created by Agostino on 22/02/2018.
  */
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 
 import com.udacity.popularmovies.BuildConfig;
@@ -132,6 +135,23 @@ public class NetworkUtils {
         } finally {
             urlConnection.disconnect();
         }
+    }
+
+    /**
+     * This method returns the state of network access.
+     *
+     * @param context The context required for call getSystemService.
+     * @return true if network access is available.
+     */
+    public static boolean isConnected(Context context) {
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        return isConnected;
     }
 
 }

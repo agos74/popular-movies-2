@@ -31,9 +31,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     private List<Movie> mMoviesList;
 
-    // Class variables for the Cursor that holds task data and the Context
+    // Class variables for the Cursor that holds movies data and the Context
     private Cursor mCursor;
     private Context mContext;
+
     private String mMoviesType;
 
     /**
@@ -124,7 +125,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
                 int plotSynopsisIndex = mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_PLOT_SYNOPSIS);
                 int backdropIndex = mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_BACKDROP);
 
-                // Move cursor to position
+                // Move cursor to right position
                 mCursor.moveToPosition(adapterPosition);
 
                 // Determine the values of the wanted data
@@ -231,10 +232,5 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         mMoviesList = moviesList;
         notifyDataSetChanged();
     }
-
-    public void setCursor(Cursor cursor) {
-        this.mCursor = cursor;
-    }
-
 
 }

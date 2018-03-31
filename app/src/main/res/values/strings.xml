@@ -1,13 +1,15 @@
 <resources>
     <string name="app_name">Popular Movies</string>
+
     <!-- Error messages-->
-    <string name="error_message">
-        An error has occurred. Please check your internet connection and try again
-    </string>
+    <string name="network_error_message">Network error. Please check your internet connection and try again.</string>
+    <string name="http_api_unauthorized_error_message">The resource you requested could not be found. Please check API key: You must be granted a valid key.</string>
     <string name="detail_error_message">Movie data not available</string>
 
-    <string name="action_sort_order_popular">Most Popular</string>
-    <string name="action_sort_order_rated">Highest Rated</string>
+    <!-- Action Menu Items -->
+    <string name="action_most_popular">Most Popular</string>
+    <string name="action_highest_rated">Highest Rated</string>
+    <string name="action_favorites">My Favorites</string>
     <string name="action_settings">Settings</string>
 
     <!-- Detail Activity-->
@@ -58,8 +60,6 @@
     <string name="pref_language_italian_key">it-IT</string>
     <string name="pref_language_default">en-EN</string>
     <string name="pref_language_key">language</string>
-    <string name="button_show">Show</string>
-    <string name="button_hide">Hide</string>
-    <string name="action_favorites">My Favorites</string>
+
 
 </resources>
