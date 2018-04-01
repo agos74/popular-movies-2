@@ -58,8 +58,23 @@
 
     <string name="pref_language_english_key">en-EN</string>
     <string name="pref_language_italian_key">it-IT</string>
-    <string name="pref_language_default">en-EN</string>
     <string name="pref_language_key">language</string>
+
+    <!-- Video Type -->
+
+    <string name="pref_title_video_type">Video Type</string>
+    <string-array name="pref_video_type_list_titles">
+        <item>Trailer</item>
+        <item>All</item>
+    </string-array>
+    <string-array name="pref_video_type_list_values">
+        <item>Trailer</item>
+        <item>All</item>
+    </string-array>
+
+    <string name="pref_video_type_trailer_key">Trailer</string>
+    <string name="pref_video_type_all_key">All</string>
+    <string name="pref_video_type_key">video-type</string>
 
 
 </resources>

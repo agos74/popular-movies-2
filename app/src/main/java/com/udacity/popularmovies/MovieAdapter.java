@@ -204,7 +204,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
                 .with(holder.mMovieImageView.getContext())
                 .load(imgUri)
                 .error(R.mipmap.ic_launcher)
-//                .placeholder(R.drawable.progress_animation)
+                .placeholder(R.drawable.progress_animation)
                 .into(holder.mMovieImageView);
 
         holder.mMovieImageView.setContentDescription(title);

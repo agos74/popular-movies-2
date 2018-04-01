@@ -2,6 +2,7 @@ package com.udacity.popularmovies;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
@@ -135,7 +137,10 @@ public class ReviewListFragment extends Fragment implements LoaderManager.Loader
         public List<Review> loadInBackground() {
             Log.d(TAG, "MyAsyncTask: loadInBackground");
 
-            URL reviewsRequestUrl = NetworkUtils.buildUrlWithMovieId(movieId, REVIEWS_REQUEST_KEY);
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getContext());
+            String language = sharedPreferences.getString(this.getContext().getResources().getString(R.string.pref_language_key), this.getContext().getResources().getString(R.string.pref_language_english_key));
+
+            URL reviewsRequestUrl = NetworkUtils.buildUrlWithMovieId(movieId, REVIEWS_REQUEST_KEY, language);
 
             try {
                 String jsonReviewsResponse = NetworkUtils

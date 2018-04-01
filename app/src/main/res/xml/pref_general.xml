@@ -3,10 +3,17 @@
 
     <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
     <ListPreference
-        android:defaultValue="@string/pref_language_default"
+        android:defaultValue="@string/pref_language_english_key"
         android:entries="@array/pref_language_list_titles"
         android:entryValues="@array/pref_language_list_values"
         android:key="@string/pref_language_key"
         android:title="@string/pref_title_language" />
+
+    <ListPreference
+        android:defaultValue="@string/pref_video_type_trailer_key"
+        android:entries="@array/pref_video_type_list_titles"
+        android:entryValues="@array/pref_video_type_list_values"
+        android:key="@string/pref_video_type_key"
+        android:title="@string/pref_title_video_type" />
 
 </PreferenceScreen>

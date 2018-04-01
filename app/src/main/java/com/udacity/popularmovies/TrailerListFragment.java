@@ -1,5 +1,6 @@
 package com.udacity.popularmovies;
 
+import android.content.SharedPreferences;
 import android.support.v4.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -131,13 +133,17 @@ public class TrailerListFragment extends Fragment implements LoaderManager.Loade
         public List<Video> loadInBackground() {
             Log.d(TAG, "MyAsyncTask: loadInBackground");
 
-            URL videosRequestUrl = NetworkUtils.buildUrlWithMovieId(movieId, VIDEOS_REQUEST_KEY);
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences( this.getContext());
+            String language = sharedPreferences.getString(this.getContext().getResources().getString(R.string.pref_language_key), this.getContext().getResources().getString(R.string.pref_language_english_key));
+            String videoType = sharedPreferences.getString(this.getContext().getResources().getString(R.string.pref_video_type_key), this.getContext().getResources().getString(R.string.pref_video_type_trailer_key));
+
+            URL videosRequestUrl = NetworkUtils.buildUrlWithMovieId(movieId, VIDEOS_REQUEST_KEY, language);
 
             try {
                 String jsonVideosResponse = NetworkUtils
                         .getResponseFromHttpUrl(videosRequestUrl);
 
-                return TheMovieDBJsonUtils.parseVideosJson(jsonVideosResponse, true, true); //get only trailers from youtube
+                return TheMovieDBJsonUtils.parseVideosJson(jsonVideosResponse, videoType, true); //get only videos from youtube
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -178,7 +184,11 @@ public class TrailerListFragment extends Fragment implements LoaderManager.Loade
         public void bindData(Video video) {
             //video thumbnail
             Uri thumbnailUri = VideoUtils.getThumbnail(video);
-            Picasso.with(mVideoIv.getContext()).load(thumbnailUri).error(R.mipmap.ic_launcher).into(mVideoIv);
+            Picasso.with(mVideoIv.getContext())
+                    .load(thumbnailUri)
+                    .error(R.mipmap.ic_launcher)
+                    .placeholder(R.drawable.progress_animation)
+                    .into(mVideoIv);
 
             mNameTv.setText(video.getName());
         }

@@ -79,8 +79,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     private static final int FAVORITES_LOADER_ID = 1;
 
     private static String mLanguage;
+    private String mVideoType;
 
     private static boolean PREFERENCES_HAVE_BEEN_UPDATED = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,10 +170,13 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     private void setupSharedPreferences() {
         // Get all of the values from shared preferences to set it up
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        mLanguage = sharedPreferences.getString(getResources().getString(R.string.pref_language_key), getResources().getString(R.string.pref_language_default));
+        mLanguage = sharedPreferences.getString(getResources().getString(R.string.pref_language_key), getResources().getString(R.string.pref_language_english_key));
+        mVideoType = sharedPreferences.getString(getResources().getString(R.string.pref_video_type_key), getResources().getString(R.string.pref_video_type_trailer_key));
         // Register the listener
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
+
+
 
     /**
      * This method is overridden by our MainActivity class in order to handle RecyclerView item
@@ -313,7 +318,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         // Set preference values just changed
         if (key.equals(getString(R.string.pref_language_key))) {
-            mLanguage = sharedPreferences.getString(key, getResources().getString(R.string.pref_language_default));
+            mLanguage = sharedPreferences.getString(key, getResources().getString(R.string.pref_language_english_key));
+        }
+        if (key.equals(getString(R.string.pref_video_type_key))) {
+            mVideoType = sharedPreferences.getString(key, getResources().getString(R.string.pref_video_type_trailer_key));
         }
 
     }

@@ -37,7 +37,7 @@ public class TheMovieDBJsonUtils {
 
     public static final String TMDB_TYPE_TRAILER_KEY = "Trailer";
 
-    public static final String TMDB_SITE_YOUTUBE_KEY = "Youtube";
+    public static final String TMDB_SITE_YOUTUBE_KEY = "YouTube";
 
     public static List<Movie> parseMoviesJson(String moviesJsonStr) throws JSONException {
 
@@ -127,7 +127,7 @@ public class TheMovieDBJsonUtils {
         return moviesList;
     }
 
-    public static List<Video> parseVideosJson(String videosJsonStr, boolean onlyTrailers, boolean onlyYoutube) throws JSONException {
+    public static List<Video> parseVideosJson(String videosJsonStr, String videoType, boolean onlyYoutube) throws JSONException {
 
         /* Videos information. Each video is an element of the "results" array */
 
@@ -194,7 +194,7 @@ public class TheMovieDBJsonUtils {
             boolean toAdd = true;
 
             //get only "Trailer" type?
-            if (onlyTrailers) {
+            if (videoType.equals(TMDB_TYPE_TRAILER_KEY)) {
                 if (!video.getType().equals(TMDB_TYPE_TRAILER_KEY)) {
                     toAdd = false;
                 }

@@ -84,7 +84,7 @@ public class NetworkUtils {
      * @param requestType The request type (videos or reviews).
      * @return The URL to use to query TheMovieDB server.
      */
-    public static URL buildUrlWithMovieId(String movieId, String requestType) {
+    public static URL buildUrlWithMovieId(String movieId, String requestType, String language) {
         String endPoint = null;
         switch (requestType) {
             case TrailerListFragment.VIDEOS_REQUEST_KEY:
@@ -98,6 +98,7 @@ public class NetworkUtils {
                 .appendEncodedPath(movieId)
                 .appendEncodedPath(endPoint)
                 .appendQueryParameter(PARAM_API_KEY, THEMOVIEDB_API_KEY)
+                .appendQueryParameter(PARAM_LANGUAGE, language)
                 .build();
 
         URL url = null;

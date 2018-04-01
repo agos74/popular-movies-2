@@ -139,13 +139,21 @@ public class DetailActivity extends AppCompatActivity {
                 .appendEncodedPath(TheMovieDBJsonUtils.TMDB_IMAGE_WIDTH_LARGE)
                 .appendEncodedPath(movie.getBackdrop())
                 .build();
-        Picasso.with(mBackdropIv.getContext()).load(backdropUri).error(R.mipmap.ic_launcher).into(mBackdropIv);
+        Picasso.with(mBackdropIv.getContext())
+                .load(backdropUri)
+                .error(R.mipmap.ic_launcher)
+                .placeholder(R.drawable.progress_animation)
+                .into(mBackdropIv);
 
         Uri posterUri = Uri.parse(TheMovieDBJsonUtils.TMDB_IMAGE_PATH).buildUpon()
                 .appendEncodedPath(TheMovieDBJsonUtils.TMDB_IMAGE_WIDTH_MEDIUM)
                 .appendEncodedPath(movie.getPoster())
                 .build();
-        Picasso.with(mPosterIv.getContext()).load(posterUri).error(R.mipmap.ic_launcher).into(mPosterIv);
+        Picasso.with(mPosterIv.getContext())
+                .load(posterUri)
+                .error(R.mipmap.ic_launcher)
+                .placeholder(R.drawable.progress_animation)
+                .into(mPosterIv);
 
 //        mTitleTv.setText(movie.getTitle());
         mOriginalTitleTv.setText(movie.getOriginalTitle());
