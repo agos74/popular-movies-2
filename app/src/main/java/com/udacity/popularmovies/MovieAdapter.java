@@ -33,9 +33,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     // Class variables for the Cursor that holds movies data and the Context
     private Cursor mCursor;
-    private Context mContext;
+    private final Context mContext;
 
-    private String mMoviesType;
+    private final String mMoviesType;
 
     /**
      * An on-click handler that we've defined to make it easy for an Activity to interface with
@@ -47,7 +47,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
      * When data changes and a re-query occurs, this function swaps the old Cursor
      * with a newly updated Cursor (Cursor c) that is passed in.
      */
-    public Cursor swapCursor(Cursor c) {
+    public void swapCursor(Cursor c) {
         if (c != null) {
             Log.d(TAG, "swapCursor: " + c.getCount());
         } else {
@@ -56,7 +56,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
         // check if this cursor is the same as the previous cursor (mCursor)
         if (mCursor == c) {
-            return null; // bc nothing has changed
+            return;
         }
         Cursor temp = mCursor;
         this.mCursor = c; // new cursor value assigned
@@ -65,7 +65,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         if (c != null) {
             notifyDataSetChanged();
         }
-        return temp;
     }
 
 

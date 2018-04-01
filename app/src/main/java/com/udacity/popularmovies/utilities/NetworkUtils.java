@@ -8,9 +8,11 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.util.Log;
 
 import com.udacity.popularmovies.BuildConfig;
 import com.udacity.popularmovies.MainActivity;
+import com.udacity.popularmovies.R;
 import com.udacity.popularmovies.ReviewListFragment;
 import com.udacity.popularmovies.TrailerListFragment;
 
@@ -19,6 +21,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Locale;
 import java.util.Scanner;
 
 
@@ -27,6 +30,7 @@ import java.util.Scanner;
  */
 public class NetworkUtils {
 
+    private static final String TAG = NetworkUtils.class.getSimpleName();
 
     private static final String THEMOVIEDB_BASE_URL = "http://api.themoviedb.org/3/movie";
 
@@ -46,7 +50,7 @@ public class NetworkUtils {
      * Builds the URL used to query TheMovieDB.
      *
      * @param sortingType The keyword that will be queried for.
-     * @param language
+     * @param language    The language to set for the query
      * @return The URL to use to query TheMovieDB server.
      */
     public static URL buildUrlWithSortingType(String sortingType, String language) {
@@ -82,6 +86,7 @@ public class NetworkUtils {
      *
      * @param movieId     The movieId that will be queried for.
      * @param requestType The request type (videos or reviews).
+     * @param language    The language to set for the query.
      * @return The URL to use to query TheMovieDB server.
      */
     public static URL buildUrlWithMovieId(String movieId, String requestType, String language) {
@@ -148,11 +153,12 @@ public class NetworkUtils {
         ConnectivityManager cm =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        boolean isConnected = activeNetwork != null &&
+        NetworkInfo activeNetwork;
+        activeNetwork = cm.getActiveNetworkInfo();
+
+        return activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
 
-        return isConnected;
     }
 
 }

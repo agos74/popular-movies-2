@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Popular Movies</string>
+    <string name="network_error_message">Errore di rete. Per favore verifica la tua connessione internet e riprova.</string>
+    <string name="detail_error_message">I dettagli del film no sono disponibili</string>
+    <string name="action_most_popular">Più Popolari</string>
+    <string name="action_favorites">Favoriti</string>
+    <string name="action_highest_rated">Più Votati</string>
+    <string name="action_settings">Impostazioni</string>
+    <string name="detail_original_title_label">Titolo originale</string>
+    <string name="detail_release_date_label">Data di uscita</string>
+    <string name="detail_rating_label">Voto</string>
+    <string name="trailers_label">Trailers</string>
+    <string name="reviews_label">Recensioni</string>
+    <string name="http_api_unauthorized_error_message">La risorsa richiesta non è stata trovata. Controlla la API key: deve essere valida.</string>
+    <string name="movie_poster_content_description">Foto del film</string>
+    <string name="movie_backdrop_content_description">Foto copertina del film</string>
+    <string name="retry">Riprova</string>
+    <string name="trailer_thumbnail_content_description">Miniatura del trailer</string>
+    <string name="activity_movie_review_url_text">Link Recensione</string>
+    <string name="review_author_label">Autore:</string>
+    <string name="title_activity_settings">Impostazioni</string>
+    <string name="pref_title_language">Lingua Sorgente Dati</string>
+    <string name="pref_title_video_type">Tipo Video</string>
+    <string name="play_video">Esegui Video</string>
+    <string name="most_popular_activity_title">Film Più Popolari</string>
+    <string name="highest_rated_activity_title">Film Più Votati</string>
+    <string name="my_favorites_activity_title">I Miei Film Preferiti</string>
+    <string name="pref_video_type_trailer_title">Trailer</string>
+    <string name="pref_video_type_all_title">Tutti</string>
+    <string name="pref_language_english_title">Inglese</string>
+    <string name="pref_language_device_title">Lingua Dispositivo</string>
+</resources>

@@ -10,7 +10,7 @@ import com.udacity.popularmovies.data.MovieContract.MovieEntry;
  * Created by Agostino on 19/03/2018.
  */
 
-public class MovieDbHelper extends SQLiteOpenHelper {
+class MovieDbHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "movies.db";
 

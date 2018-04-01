@@ -12,7 +12,6 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
@@ -195,7 +194,7 @@ public class ReviewListFragment extends Fragment implements LoaderManager.Loader
                 @Override
                 public void onGlobalLayout() {
 
-                    Log.d(TAG, "mContentTv linecount: " + mContentTv.getLineCount());
+                    Log.d(TAG, "mContentTv line count: " + mContentTv.getLineCount());
                     if (mContentTv.getLineCount() > MAX_TEXT_LINES) {
                         mButtonToggle.setVisibility(View.VISIBLE);
                         mContentTv.setMaxLines(MAX_TEXT_LINES);
@@ -222,7 +221,7 @@ public class ReviewListFragment extends Fragment implements LoaderManager.Loader
 
 
         @OnClick(R.id.toggle_btn)
-        public void toggleClick(View view) {
+        public void toggleClick() {
 
             if (mContentTv.getMaxLines() == MAX_TEXT_LINES) { //expand
                 mContentTv.setMaxLines(Integer.MAX_VALUE);

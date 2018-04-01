@@ -32,6 +32,7 @@ import com.udacity.popularmovies.utilities.TheMovieDBJsonUtils;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,10 +44,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     public static final String MOST_POPULAR_KEY = "p";
     public static final String TOP_RATED_KEY = "t";
     public static final String FAVORITES_KEY = "f";
-
-    private static final String MOST_POPULAR_TITLE = "Most Popular Movies";
-    private static final String TOP_RATED_TITLE = "Highest Rated Movies";
-    private static final String FAVORITES_TITLE = "My Favorites Movies";
 
     //ButterKnife Binding
     @BindView(R.id.recyclerview_main)
@@ -79,10 +76,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     private static final int FAVORITES_LOADER_ID = 1;
 
     private static String mLanguage;
-    private String mVideoType;
 
     private static boolean PREFERENCES_HAVE_BEEN_UPDATED = false;
 
+    private static final String PREF_LANGUAGE_DEVICE_KEY = "default";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,10 +124,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         mRetryButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (!NetworkUtils.isConnected(getBaseContext())) {
-                    showErrorMessage(getBaseContext().getResources().getString(R.string.network_error_message));
-                } else {
+                if (NetworkUtils.isConnected(getBaseContext())) {
                     getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, null, moviesLoaderListener);
+                } else {
+                    showErrorMessage(getBaseContext().getResources().getString(R.string.network_error_message));
                 }
             }
         });
@@ -146,12 +143,12 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         setupSharedPreferences();
 
-        if (!NetworkUtils.isConnected(getBaseContext())) {
-            showErrorMessage(getBaseContext().getResources().getString(R.string.network_error_message));
-        } else {
+        if (NetworkUtils.isConnected(getBaseContext())) {
             // Initialize the AsyncTaskLoaders
             getSupportLoaderManager().initLoader(MOVIES_LOADER_ID, null, moviesLoaderListener);
             getSupportLoaderManager().initLoader(FAVORITES_LOADER_ID, null, favoritesLoaderListener);
+        } else {
+            showErrorMessage(getBaseContext().getResources().getString(R.string.network_error_message));
         }
 
 
@@ -170,12 +167,11 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     private void setupSharedPreferences() {
         // Get all of the values from shared preferences to set it up
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        mLanguage = sharedPreferences.getString(getResources().getString(R.string.pref_language_key), getResources().getString(R.string.pref_language_english_key));
-        mVideoType = sharedPreferences.getString(getResources().getString(R.string.pref_video_type_key), getResources().getString(R.string.pref_video_type_trailer_key));
+        String language = sharedPreferences.getString(getResources().getString(R.string.pref_language_key), getResources().getString(R.string.pref_language_english_key));
+        mLanguage = getLanguageFromPref(language);
         // Register the listener
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
-
 
 
     /**
@@ -216,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
      * Since it is okay to redundantly set the visibility of a View, we don't
      * need to check whether each view is currently visible or invisible.
      *
-     * @param errorMessage
+     * @param errorMessage the error message to show
      */
     private void showErrorMessage(String errorMessage) {
         // Hide mRecyclerView, not mMovieImageView
@@ -227,7 +223,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         mErrorLayout.setVisibility(View.VISIBLE);
     }
 
-    private LoaderManager.LoaderCallbacks<List<Movie>> moviesLoaderListener = new LoaderManager.LoaderCallbacks<List<Movie>>() {
+    private final LoaderManager.LoaderCallbacks<List<Movie>> moviesLoaderListener = new LoaderManager.LoaderCallbacks<List<Movie>>() {
         @Override
         public Loader<List<Movie>> onCreateLoader(int id, Bundle args) {
 
@@ -255,7 +251,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         }
     };
 
-    private LoaderManager.LoaderCallbacks<Cursor> favoritesLoaderListener
+    private final LoaderManager.LoaderCallbacks<Cursor> favoritesLoaderListener
             = new LoaderManager.LoaderCallbacks<Cursor>() {
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -290,10 +286,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         if (PREFERENCES_HAVE_BEEN_UPDATED) {
             Log.d(TAG, "onStart: preferences were updated");
 
-            if (!NetworkUtils.isConnected(getBaseContext())) {
-                showErrorMessage(getBaseContext().getResources().getString(R.string.network_error_message));
-            } else {
+            if (NetworkUtils.isConnected(getBaseContext())) {
                 getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, null, moviesLoaderListener);
+            } else {
+                showErrorMessage(getBaseContext().getResources().getString(R.string.network_error_message));
             }
             PREFERENCES_HAVE_BEEN_UPDATED = false;
         }
@@ -318,11 +314,11 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         // Set preference values just changed
         if (key.equals(getString(R.string.pref_language_key))) {
-            mLanguage = sharedPreferences.getString(key, getResources().getString(R.string.pref_language_english_key));
+            String language = sharedPreferences.getString(key, getResources().getString(R.string.pref_language_english_key));
+            mLanguage = getLanguageFromPref(language);
+
         }
-        if (key.equals(getString(R.string.pref_video_type_key))) {
-            mVideoType = sharedPreferences.getString(key, getResources().getString(R.string.pref_video_type_trailer_key));
-        }
+
 
     }
 
@@ -349,6 +345,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
             String orderType = mMoviesType;
             String language = mLanguage;
+
             URL moviesRequestUrl = NetworkUtils.buildUrlWithSortingType(orderType, language);
 
             try {
@@ -448,13 +445,13 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         String title;
         switch (mMoviesType) {
             case MainActivity.MOST_POPULAR_KEY:
-                title = MOST_POPULAR_TITLE;
+                title = getResources().getString(R.string.most_popular_activity_title);
                 break;
             case MainActivity.TOP_RATED_KEY:
-                title = TOP_RATED_TITLE;
+                title = getResources().getString(R.string.highest_rated_activity_title);
                 break;
             case MainActivity.FAVORITES_KEY:
-                title = FAVORITES_TITLE;
+                title = getResources().getString(R.string.my_favorites_activity_title);
                 break;
             default:
                 title = getString(R.string.app_name);
@@ -529,10 +526,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 mRecyclerView.setAdapter(mMovieAdapter);
 
                 invalidateData();
-                if (!NetworkUtils.isConnected(getBaseContext())) {
-                    showErrorMessage(getBaseContext().getResources().getString(R.string.network_error_message));
-                } else {
+                if (NetworkUtils.isConnected(getBaseContext())) {
                     getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, null, moviesLoaderListener);
+                } else {
+                    showErrorMessage(getBaseContext().getResources().getString(R.string.network_error_message));
                 }
                 break;
             case R.id.action_sort_order_rated:
@@ -545,11 +542,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 mRecyclerView.setAdapter(mMovieAdapter);
 
                 invalidateData();
-
-                if (!NetworkUtils.isConnected(getBaseContext())) {
-                    showErrorMessage(getBaseContext().getResources().getString(R.string.network_error_message));
-                } else {
+                if (NetworkUtils.isConnected(getBaseContext())) {
                     getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, null, moviesLoaderListener);
+                } else {
+                    showErrorMessage(getBaseContext().getResources().getString(R.string.network_error_message));
                 }
                 break;
             case R.id.action_favorites:
@@ -576,6 +572,14 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         return super.onOptionsItemSelected(item);
 
+    }
+
+    private static String getLanguageFromPref(String language) {
+        if (language.equals(PREF_LANGUAGE_DEVICE_KEY)) {
+            language = Locale.getDefault().getLanguage();
+        }
+        Log.d(TAG, "language: " + language);
+        return language;
     }
 
 

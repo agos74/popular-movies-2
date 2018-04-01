@@ -17,7 +17,7 @@ public class VideoUtils {
     private static final String YOUTUBE_THUMBNAIL_BASE_URL = "https://img.youtube.com/vi/";
 
     // Custom thumbnail in 320 x 180 small image resolution
-    private static final String _YOUTUBE_SMALL_IMAGE_KEY = "mqdefault";
+    private static final String YOUTUBE_SMALL_IMAGE_KEY = "mqdefault";
     // Custom thumbnail in 480 x 360 standard image resolution
     private static final String YOUTUBE_STANDARD_IMAGE_KEY = "0";
     // Custom thumbnail  in 720p or 1080p HD image resolution

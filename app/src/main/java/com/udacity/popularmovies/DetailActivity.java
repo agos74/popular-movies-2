@@ -13,10 +13,8 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -247,13 +245,25 @@ public class DetailActivity extends AppCompatActivity {
     // Check if movie with movieId is in the favorites list
     private boolean isFavorite(String movieId) {
 
+        boolean isFavorite = false;
+
         // Build appropriate uri with String row id appended
         Uri uri = MovieContract.MovieEntry.CONTENT_URI;
         uri = uri.buildUpon().appendPath(movieId).build();
 
-        Cursor retCursor = getContentResolver().query(uri, null, null, null, null);
+        Cursor retCursor = null;
+        try {
+            String[] projection = {MovieContract.MovieEntry.COLUMN_MOVIE_ID};
+            retCursor = getContentResolver().query(uri, projection, null, null, null);
+        } finally {
 
-        boolean isFavorite = retCursor.getCount() > 0;
+            if (retCursor != null) {
+                isFavorite = retCursor.getCount() > 0;
+
+                // Close the cursor
+                retCursor.close();
+            }
+        }
 
         return isFavorite;
     }

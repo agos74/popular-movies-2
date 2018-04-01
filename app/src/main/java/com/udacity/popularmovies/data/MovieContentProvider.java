@@ -21,8 +21,8 @@ import static com.udacity.popularmovies.data.MovieContract.MovieEntry.TABLE_NAME
 public class MovieContentProvider extends ContentProvider {
 
     // Define final integer constants for the directory of movies and a single item.
-    public static final int MOVIES = 100;
-    public static final int MOVIE_WITH_ID = 101;
+    private static final int MOVIES = 100;
+    private static final int MOVIE_WITH_ID = 101;
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
 
@@ -30,7 +30,7 @@ public class MovieContentProvider extends ContentProvider {
      * Initialize a new matcher object without any matches,
      * then use .addURI(String authority, String path, int match) to add matches
      */
-    public static UriMatcher buildUriMatcher() {
+    private static UriMatcher buildUriMatcher() {
 
         // Initialize a UriMatcher with no matches by passing in NO_MATCH to the constructor
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);

@@ -27,7 +27,6 @@ import com.udacity.popularmovies.utilities.TheMovieDBJsonUtils;
 import com.udacity.popularmovies.utilities.VideoUtils;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -143,7 +142,7 @@ public class TrailerListFragment extends Fragment implements LoaderManager.Loade
                 String jsonVideosResponse = NetworkUtils
                         .getResponseFromHttpUrl(videosRequestUrl);
 
-                return TheMovieDBJsonUtils.parseVideosJson(jsonVideosResponse, videoType, true); //get only videos from youtube
+                return TheMovieDBJsonUtils.parseVideosJson(jsonVideosResponse, videoType, true, this.getContext()); //get only videos from youtube
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -173,7 +172,7 @@ public class TrailerListFragment extends Fragment implements LoaderManager.Loade
         @BindView(R.id.name_tv)
         TextView mNameTv;
 
-        private View view;
+        private final View view;
 
         public VideoHolder(View itemView) {
             super(itemView);

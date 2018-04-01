@@ -1,12 +1,9 @@
 package com.udacity.popularmovies.utilities;
 
 
-import android.app.Application;
 import android.content.Context;
-import android.content.res.Resources;
 import android.util.Log;
 
-import com.udacity.popularmovies.MainActivity;
 import com.udacity.popularmovies.R;
 import com.udacity.popularmovies.model.Movie;
 import com.udacity.popularmovies.model.Review;
@@ -30,14 +27,14 @@ public class TheMovieDBJsonUtils {
     public static final String TMDB_IMAGE_WIDTH_MEDIUM = "w185/";
     public static final String TMDB_IMAGE_WIDTH_LARGE = "w500/";
 
-    public static final String TMDB_RESULTS = "results";
+    private static final String TMDB_RESULTS = "results";
 
     //error message code
-    public static final String TMDB_MESSAGE_CODE = "cod";
+    private static final String TMDB_MESSAGE_CODE = "cod";
 
-    public static final String TMDB_TYPE_TRAILER_KEY = "Trailer";
+    private static final String TMDB_TYPE_TRAILER_KEY = "Trailer";
 
-    public static final String TMDB_SITE_YOUTUBE_KEY = "YouTube";
+    private static final String TMDB_SITE_YOUTUBE_KEY = "YouTube";
 
     public static List<Movie> parseMoviesJson(String moviesJsonStr) throws JSONException {
 
@@ -127,7 +124,7 @@ public class TheMovieDBJsonUtils {
         return moviesList;
     }
 
-    public static List<Video> parseVideosJson(String videosJsonStr, String videoType, boolean onlyYoutube) throws JSONException {
+    public static List<Video> parseVideosJson(String videosJsonStr, String videoType, boolean onlyYoutube, Context context) throws JSONException {
 
         /* Videos information. Each video is an element of the "results" array */
 
@@ -162,6 +159,9 @@ public class TheMovieDBJsonUtils {
             }
         }
 
+        // Get preference trailer key from context
+        String prefTrailerKey = context.getResources().getString(R.string.pref_video_type_trailer_key);
+
         JSONArray videosArray = videosJson.getJSONArray(TMDB_RESULTS);
 
         for (int i = 0; i < videosArray.length(); i++) {
@@ -194,7 +194,7 @@ public class TheMovieDBJsonUtils {
             boolean toAdd = true;
 
             //get only "Trailer" type?
-            if (videoType.equals(TMDB_TYPE_TRAILER_KEY)) {
+            if (videoType.equals(prefTrailerKey)) {
                 if (!video.getType().equals(TMDB_TYPE_TRAILER_KEY)) {
                     toAdd = false;
                 }
