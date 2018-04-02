@@ -1,6 +1,8 @@
 package com.udacity.popularmovies;
 
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.support.v4.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
@@ -106,7 +108,7 @@ public class TrailerListFragment extends Fragment implements LoaderManager.Loade
         // Set first trailer key for share
         String firstTrailerKey = null;
         if (numTrailers > 0) {
-             firstTrailerKey = videoList.get(0).getKey();
+            firstTrailerKey = videoList.get(0).getKey();
         }
         ((DetailActivity) getActivity()).setFirstTrailerKey(firstTrailerKey);
 
@@ -227,15 +229,26 @@ public class TrailerListFragment extends Fragment implements LoaderManager.Loade
                 @Override
                 public void onClick(View v) {
                     Context context = v.getContext();
-//                    Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + video.getKey()));
-//                    context.startActivity(appIntent);
 
+                    Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + video.getKey()));
                     Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + video.getKey()));
-                    context.startActivity(webIntent);
+
+                    if (isCallable(appIntent)) {
+                        context.startActivity(appIntent);
+                    } else {
+                        context.startActivity(webIntent);
+                    }
                 }
             });
 
             holder.bindData(video);
+        }
+
+        // Check is app is available in device
+        private boolean isCallable(Intent intent) {
+            List<ResolveInfo> list = getContext().getPackageManager().queryIntentActivities(intent,
+                    PackageManager.MATCH_DEFAULT_ONLY);
+            return list.size() > 0;
         }
 
         @Override

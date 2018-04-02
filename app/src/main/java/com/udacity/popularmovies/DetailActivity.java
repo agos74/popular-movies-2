@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,10 +37,9 @@ import butterknife.OnClick;
 public class DetailActivity extends AppCompatActivity {
 
     private static final String TAG = DetailActivity.class.getSimpleName();
-    private static final String NOT_ASSIGNED = "NOT_ASSIGNED";
 
     private Movie movie;
-    private String mFirstTrailerKey = NOT_ASSIGNED;
+    private String mFirstTrailerKey;
 
     //ButterKnife Binding
     @BindView(R.id.toolbar)
@@ -270,7 +270,7 @@ public class DetailActivity extends AppCompatActivity {
 
         getMenuInflater().inflate(R.menu.detail, menu);
 
-        return false;
+        return true;
     }
 
 
@@ -323,5 +323,6 @@ public class DetailActivity extends AppCompatActivity {
                 .putExtra(Intent.EXTRA_TEXT, shareLink);
         return shareIntent;
     }
+
 
 }

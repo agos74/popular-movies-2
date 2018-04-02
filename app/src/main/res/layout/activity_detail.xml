@@ -201,4 +201,5 @@
         app:layout_anchorGravity="bottom|right|end"
         app:srcCompat="@drawable/ic_star_outline_24px" />
 
+
 </android.support.design.widget.CoordinatorLayout>
