@@ -1,5 +1,6 @@
 package com.udacity.popularmovies;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,6 +22,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.facebook.stetho.Stetho;
 import com.udacity.popularmovies.data.MovieContract;
@@ -129,6 +131,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             showErrorMessage(getBaseContext().getResources().getString(R.string.network_error_message));
         }
 
+        setActivityTitle();
 
         Log.d(TAG, "onCreate: registering preference changed listener");
 
@@ -165,9 +168,23 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         Class destinationClass = DetailActivity.class;
         Intent intentToStartDetailActivity = new Intent(context, destinationClass);
         intentToStartDetailActivity.putExtra("Movie", movie);
-        startActivity(intentToStartDetailActivity);
+        intentToStartDetailActivity.putExtra("favorites", mMoviesType.equals(FAVORITES_KEY));
+        // Use startActivityForResult to get result if back is pressed
+        startActivityForResult(intentToStartDetailActivity, 1);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                // Check if favorites have been removed, in case reload favorites
+                boolean refresh_favorites = data.getBooleanExtra("flag_refresh", false);
+                if (refresh_favorites) {
+                    getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, null, favoritesLoaderListener);
+                }
+            }
+        }
+    }
 
     /**
      * This method will make the loading indicator visible.
