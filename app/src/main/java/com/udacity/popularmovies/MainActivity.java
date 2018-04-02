@@ -1,12 +1,14 @@
 package com.udacity.popularmovies;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.preference.PreferenceManager;
@@ -18,17 +20,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.facebook.stetho.Stetho;
 import com.udacity.popularmovies.data.MovieContract;
 import com.udacity.popularmovies.model.Movie;
-import com.udacity.popularmovies.utilities.GridSpacingItemDecoration;
-import com.udacity.popularmovies.utilities.NetworkUtils;
-import com.udacity.popularmovies.utilities.TheMovieDBJsonUtils;
+import com.udacity.popularmovies.utils.GridSpacingItemDecoration;
+import com.udacity.popularmovies.utils.NetworkUtils;
+import com.udacity.popularmovies.utils.TheMovieDBJsonUtils;
 
 import java.net.URL;
 import java.util.List;
@@ -49,20 +48,12 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     @BindView(R.id.recyclerview_main)
     RecyclerView mRecyclerView;
 
-    /* This Layout with TextView and Button is used to display errors and will be hidden if there are no errors */
-    @BindView(R.id.layout_error)
-    LinearLayout mErrorLayout;
-    @BindView(R.id.error_message_tv)
-    TextView mErrorMessageTv;
-
     /*
      * The ProgressBar that will indicate to the user that we are loading data. It will be
      * hidden when no data is loading.
      */
     @BindView(R.id.pb_loading_indicator)
     ProgressBar mLoadingIndicator;
-    @BindView(R.id.retry_button)
-    Button mRetryButton;
 
 
     private MovieAdapter mMovieAdapter;
@@ -118,16 +109,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                         .getString(MOVIES_TYPE_TEXT_KEY);
             }
         }
-
-        mRetryButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (NetworkUtils.isConnected(getBaseContext())) {
-                    getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, null, moviesLoaderListener);
-                } else {
-                    showErrorMessage(getBaseContext().getResources().getString(R.string.network_error_message));
-                }
-            }
-        });
 
         // Stetho integration, to view dataabase in chrome inspect.
         Stetho.initialize(
@@ -189,23 +170,20 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
 
     /**
-     * This method will make the loading indicator visible and hide the movies View and error
-     * message.
+     * This method will make the loading indicator visible.
      * <p>
      * Since it is okay to redundantly set the visibility of a View, we don't need to check whether
      * each view is currently visible or invisible.
      */
     private void showLoading() {
-        /* First, make sure the error is invisible */
-        mErrorLayout.setVisibility(View.INVISIBLE);
-        /* Finally, show the loading indicator */
+        /* Show the loading indicator */
         mLoadingIndicator.setVisibility(View.VISIBLE);
     }
 
 
     /**
      * This method will make the View for the movies data visible and
-     * hide the error message.
+     * hide the loading indicator.
      * <p>
      * Since it is okay to redundantly set the visibility of a View, we don't
      * need to check whether each view is currently visible or invisible.
@@ -213,28 +191,24 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     private void showMoviesDataView() {
         /* First, hide the loading indicator */
         mLoadingIndicator.setVisibility(View.INVISIBLE);
-        /* Second, make sure the error is invisible */
-        mErrorLayout.setVisibility(View.INVISIBLE);
-        // Show mRecyclerView, not mMovieImageView
+        // Finally, show mRecyclerView
         mRecyclerView.setVisibility(View.VISIBLE);
     }
 
     /**
-     * This method will make the error message visible and hide the movies
-     * View.
+     * This method will make the error message visible.
      * <p>
      * Since it is okay to redundantly set the visibility of a View, we don't
      * need to check whether each view is currently visible or invisible.
      *
      * @param errorMessage the error message to show
      */
+
     private void showErrorMessage(String errorMessage) {
-        /* First, hide the currently visible data */
-        mRecyclerView.setVisibility(View.INVISIBLE);
+        /* First, hide loading indicator */
         mLoadingIndicator.setVisibility(View.INVISIBLE);
         /* Then, show the error */
-        mErrorMessageTv.setText(errorMessage);
-        mErrorLayout.setVisibility(View.VISIBLE);
+        showAlertDialog(errorMessage);
     }
 
     private final LoaderManager.LoaderCallbacks<List<Movie>> moviesLoaderListener = new LoaderManager.LoaderCallbacks<List<Movie>>() {
@@ -579,5 +553,59 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     }
 
+    private void showAlertDialog(final String errorMessage) {
+
+        AlertDialog alertDialog = new AlertDialog.Builder(
+                MainActivity.this).create();
+
+        // Setting Dialog Title
+        alertDialog.setTitle("Alert Dialog");
+
+        // Setting Dialog Message
+        alertDialog.setMessage(errorMessage);
+
+        // Setting Icon to Dialog
+        alertDialog.setIcon(R.drawable.ic_offline);
+
+        // Setting OK Button
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getString(R.string.open_favorite_button_title),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        // load favorites movies
+                        mMoviesType = FAVORITES_KEY;
+
+                        // set mMovieAdapter equal to a new MovieAdapter
+                        mMovieAdapter = new MovieAdapter(MainActivity.this, MainActivity.this, mMoviesType);
+
+                        /* attaches adapter to the RecyclerView in layout. */
+                        mRecyclerView.setAdapter(mMovieAdapter);
+
+                        invalidateData();
+                        getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, null, favoritesLoaderListener);
+
+                        setActivityTitle();
+
+                        // close alert dialog
+                        dialog.dismiss();// use dismiss to cancel alert dialog
+                    }
+                });
+        // Setting Retry Button
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.retry_button_title),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // retry reloading
+                        if (NetworkUtils.isConnected(getBaseContext())) {
+                            getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, null, moviesLoaderListener);
+                        } else {
+                            showErrorMessage(errorMessage);
+                        }
+                        dialog.dismiss();// use dismiss to cancel alert dialog
+                    }
+                });
+
+        // Showing Alert Message
+        alertDialog.show();
+    }
 
 }

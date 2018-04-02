@@ -1,10 +1,8 @@
-package com.udacity.popularmovies.utilities;
+package com.udacity.popularmovies.utils;
 
 
-import android.content.Context;
 import android.util.Log;
 
-import com.udacity.popularmovies.R;
 import com.udacity.popularmovies.model.Movie;
 import com.udacity.popularmovies.model.Review;
 import com.udacity.popularmovies.model.Video;

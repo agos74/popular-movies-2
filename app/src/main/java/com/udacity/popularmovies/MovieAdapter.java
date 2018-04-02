@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 import com.udacity.popularmovies.data.MovieContract;
 import com.udacity.popularmovies.model.Movie;
-import com.udacity.popularmovies.utilities.TheMovieDBJsonUtils;
+import com.udacity.popularmovies.utils.TheMovieDBJsonUtils;
 
 import java.util.List;
 

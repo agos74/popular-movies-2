@@ -24,9 +24,9 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.udacity.popularmovies.model.Video;
-import com.udacity.popularmovies.utilities.NetworkUtils;
-import com.udacity.popularmovies.utilities.TheMovieDBJsonUtils;
-import com.udacity.popularmovies.utilities.VideoUtils;
+import com.udacity.popularmovies.utils.NetworkUtils;
+import com.udacity.popularmovies.utils.TheMovieDBJsonUtils;
+import com.udacity.popularmovies.utils.VideoUtils;
 
 import java.net.URL;
 import java.util.List;

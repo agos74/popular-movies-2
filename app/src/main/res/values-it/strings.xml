@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Popular Movies</string>
-    <string name="network_error_message">Errore di rete. Per favore verifica la tua connessione internet e riprova.</string>
+    <string name="network_error_message">Errore di rete. Per favore verifica la tua connessione internet e riprova. Solo i film preferiti sono disponibili senza connessione.</string>
     <string name="detail_error_message">I dettagli del film no sono disponibili</string>
     <string name="action_most_popular">Più Popolari</string>
     <string name="action_favorites">Preferiti</string>
@@ -15,7 +15,7 @@
     <string name="http_api_unauthorized_error_message">La risorsa richiesta non è stata trovata. Controlla la API key: deve essere valida.</string>
     <string name="movie_poster_content_description">Foto del film</string>
     <string name="movie_backdrop_content_description">Foto copertina del film</string>
-    <string name="retry">Riprova</string>
+    <string name="retry_button_title">Riprova</string>
     <string name="trailer_thumbnail_content_description">Miniatura del trailer</string>
     <string name="activity_movie_review_url_text">Link Recensione</string>
     <string name="review_author_label">Autore:</string>
@@ -37,5 +37,6 @@
 
     <string name="share_no_trailer_message">Nessun trailer da condividere</string>
     <string name="share_trailer_using_message">Condividi il trailer usando</string>
+    <string name="open_favorite_button_title">Vai ai preferiti</string>
 
 </resources>

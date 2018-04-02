@@ -24,8 +24,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.udacity.popularmovies.model.Review;
-import com.udacity.popularmovies.utilities.NetworkUtils;
-import com.udacity.popularmovies.utilities.TheMovieDBJsonUtils;
+import com.udacity.popularmovies.utils.NetworkUtils;
+import com.udacity.popularmovies.utils.TheMovieDBJsonUtils;
 
 import java.net.URL;
 import java.util.List;

@@ -18,7 +18,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +26,8 @@ import com.elmargomez.typer.Typer;
 import com.squareup.picasso.Picasso;
 import com.udacity.popularmovies.data.MovieContract;
 import com.udacity.popularmovies.model.Movie;
-import com.udacity.popularmovies.utilities.TheMovieDBJsonUtils;
+import com.udacity.popularmovies.utils.DateUtils;
+import com.udacity.popularmovies.utils.TheMovieDBJsonUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -162,7 +162,7 @@ public class DetailActivity extends AppCompatActivity {
 
 //        mTitleTv.setText(movie.getTitle());
         mOriginalTitleTv.setText(movie.getOriginalTitle());
-        mReleaseDateTv.setText(movie.getReleaseDate());
+        mReleaseDateTv.setText(DateUtils.getDateFormatted(movie.getReleaseDate()));
         String rating = movie.getRating().concat("/10");
         mRatingTv.setText(rating);
         mPlotSynopsisTv.setText(movie.getPlotSynopsis());

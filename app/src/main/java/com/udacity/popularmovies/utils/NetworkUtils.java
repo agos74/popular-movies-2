@@ -1,4 +1,4 @@
-package com.udacity.popularmovies.utilities;
+package com.udacity.popularmovies.utils;
 
 /*
   Created by Agostino on 22/02/2018.
@@ -8,11 +8,9 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.util.Log;
 
 import com.udacity.popularmovies.BuildConfig;
 import com.udacity.popularmovies.MainActivity;
-import com.udacity.popularmovies.R;
 import com.udacity.popularmovies.ReviewListFragment;
 import com.udacity.popularmovies.TrailerListFragment;
 
@@ -21,7 +19,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Locale;
 import java.util.Scanner;
 
 

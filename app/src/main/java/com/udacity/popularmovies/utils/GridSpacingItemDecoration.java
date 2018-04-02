@@ -1,4 +1,4 @@
-package com.udacity.popularmovies.utilities;
+package com.udacity.popularmovies.utils;
 
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;

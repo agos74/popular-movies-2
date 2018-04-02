@@ -2,7 +2,7 @@
     <string name="app_name">Popular Movies</string>
 
     <!-- Error messages-->
-    <string name="network_error_message">Network error. Please check your internet connection and try again.</string>
+    <string name="network_error_message">Network error. Please check your internet connection and try again. Only favorites movies are available offline.</string>
     <string name="http_api_unauthorized_error_message">The resource you requested could not be found. Please check API key: You must be granted a valid key.</string>
     <string name="detail_error_message">Movie data not available</string>
 
@@ -27,7 +27,7 @@
     <string name="trailer_thumbnail_content_description">Trailer thumbnail picture</string>
 
     <!-- Button title -->
-    <string name="retry">Retry</string>
+    <string name="retry_button_title">Retry</string>
 
     <!-- Movie details text -->
     <string name="activity_movie_title_text" translatable="false">Maze Runner: The Scorch Trials</string>
@@ -92,6 +92,7 @@
     <string name="pref_video_type_all_label">All</string>
     <string name="pref_language_english_label">English</string>
     <string name="pref_language_device_label">Current Device Language</string>
+    <string name="open_favorite_button_title">Go to favorites</string>
 
 
 </resources>

@@ -1,4 +1,4 @@
-package com.udacity.popularmovies.utilities;
+package com.udacity.popularmovies.utils;
 
 import android.net.Uri;
 import android.util.Log;
@@ -11,7 +11,7 @@ import com.udacity.popularmovies.model.Video;
 
 public class VideoUtils {
 
-    private static final String TAG = Video.class.getSimpleName();
+    private static final String TAG = VideoUtils.class.getSimpleName();
 
     private static final String YOUTUBE_SITE_KEY = "YouTube";
     private static final String YOUTUBE_THUMBNAIL_BASE_URL = "https://img.youtube.com/vi/";
