@@ -28,6 +28,7 @@ import com.udacity.popularmovies.utilities.VideoUtils;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -132,9 +133,12 @@ public class TrailerListFragment extends Fragment implements LoaderManager.Loade
         public List<Video> loadInBackground() {
             Log.d(TAG, "MyAsyncTask: loadInBackground");
 
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences( this.getContext());
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getContext());
             String language = sharedPreferences.getString(this.getContext().getResources().getString(R.string.pref_language_key), this.getContext().getResources().getString(R.string.pref_language_english_key));
+            language = language.equals(this.getContext().getResources().getString(R.string.pref_language_device_key)) ? Locale.getDefault().getLanguage() : language;
+
             String videoType = sharedPreferences.getString(this.getContext().getResources().getString(R.string.pref_video_type_key), this.getContext().getResources().getString(R.string.pref_video_type_trailer_key));
+            boolean onlyTrailer = videoType.equals(this.getContext().getResources().getString(R.string.pref_video_type_trailer_key));
 
             URL videosRequestUrl = NetworkUtils.buildUrlWithMovieId(movieId, VIDEOS_REQUEST_KEY, language);
 
@@ -142,7 +146,7 @@ public class TrailerListFragment extends Fragment implements LoaderManager.Loade
                 String jsonVideosResponse = NetworkUtils
                         .getResponseFromHttpUrl(videosRequestUrl);
 
-                return TheMovieDBJsonUtils.parseVideosJson(jsonVideosResponse, videoType, true, this.getContext()); //get only videos from youtube
+                return TheMovieDBJsonUtils.parseVideosJson(jsonVideosResponse, onlyTrailer, true); //get only videos from youtube
 
             } catch (Exception e) {
                 e.printStackTrace();

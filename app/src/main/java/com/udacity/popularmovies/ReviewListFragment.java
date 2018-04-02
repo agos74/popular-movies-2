@@ -29,6 +29,7 @@ import com.udacity.popularmovies.utilities.TheMovieDBJsonUtils;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -138,6 +139,7 @@ public class ReviewListFragment extends Fragment implements LoaderManager.Loader
 
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getContext());
             String language = sharedPreferences.getString(this.getContext().getResources().getString(R.string.pref_language_key), this.getContext().getResources().getString(R.string.pref_language_english_key));
+            language = language.equals(this.getContext().getResources().getString(R.string.pref_language_device_key)) ? Locale.getDefault().getLanguage() : language;
 
             URL reviewsRequestUrl = NetworkUtils.buildUrlWithMovieId(movieId, REVIEWS_REQUEST_KEY, language);
 

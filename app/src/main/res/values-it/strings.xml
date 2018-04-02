@@ -4,7 +4,7 @@
     <string name="network_error_message">Errore di rete. Per favore verifica la tua connessione internet e riprova.</string>
     <string name="detail_error_message">I dettagli del film no sono disponibili</string>
     <string name="action_most_popular">Più Popolari</string>
-    <string name="action_favorites">Favoriti</string>
+    <string name="action_favorites">Preferiti</string>
     <string name="action_highest_rated">Più Votati</string>
     <string name="action_settings">Impostazioni</string>
     <string name="detail_original_title_label">Titolo originale</string>
@@ -26,8 +26,8 @@
     <string name="most_popular_activity_title">Film Più Popolari</string>
     <string name="highest_rated_activity_title">Film Più Votati</string>
     <string name="my_favorites_activity_title">I Miei Film Preferiti</string>
-    <string name="pref_video_type_trailer_title">Trailer</string>
-    <string name="pref_video_type_all_title">Tutti</string>
-    <string name="pref_language_english_title">Inglese</string>
-    <string name="pref_language_device_title">Lingua Dispositivo</string>
+    <string name="pref_video_type_trailer_label">Trailer</string>
+    <string name="pref_video_type_all_label">Tutti</string>
+    <string name="pref_language_english_label">Inglese</string>
+    <string name="pref_language_device_label">Lingua Dispositivo</string>
 </resources>

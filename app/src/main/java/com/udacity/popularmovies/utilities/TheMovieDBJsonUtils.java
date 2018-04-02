@@ -124,7 +124,7 @@ public class TheMovieDBJsonUtils {
         return moviesList;
     }
 
-    public static List<Video> parseVideosJson(String videosJsonStr, String videoType, boolean onlyYoutube, Context context) throws JSONException {
+    public static List<Video> parseVideosJson(String videosJsonStr, boolean onlyTrailer, boolean onlyYoutube) throws JSONException {
 
         /* Videos information. Each video is an element of the "results" array */
 
@@ -159,9 +159,6 @@ public class TheMovieDBJsonUtils {
             }
         }
 
-        // Get preference trailer key from context
-        String prefTrailerKey = context.getResources().getString(R.string.pref_video_type_trailer_key);
-
         JSONArray videosArray = videosJson.getJSONArray(TMDB_RESULTS);
 
         for (int i = 0; i < videosArray.length(); i++) {
@@ -194,7 +191,7 @@ public class TheMovieDBJsonUtils {
             boolean toAdd = true;
 
             //get only "Trailer" type?
-            if (videoType.equals(prefTrailerKey)) {
+            if (onlyTrailer) {
                 if (!video.getType().equals(TMDB_TYPE_TRAILER_KEY)) {
                     toAdd = false;
                 }

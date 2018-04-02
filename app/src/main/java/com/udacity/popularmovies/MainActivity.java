@@ -79,7 +79,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     private static boolean PREFERENCES_HAVE_BEEN_UPDATED = false;
 
-    private static final String PREF_LANGUAGE_DEVICE_KEY = "default";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +86,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
-
 
         /*
          * GridLayoutManager to show the movie posters
@@ -112,7 +110,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         /* attaches adapter to the RecyclerView in layout. */
         mRecyclerView.setAdapter(mMovieAdapter);
-
 
         // If savedInstanceState is not null and contains MOVIES_TYPE_TEXT_KEY, set mMoviesType with the value
         if (savedInstanceState != null) {
@@ -168,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         // Get all of the values from shared preferences to set it up
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String language = sharedPreferences.getString(getResources().getString(R.string.pref_language_key), getResources().getString(R.string.pref_language_english_key));
-        mLanguage = getLanguageFromPref(language);
+        mLanguage = language.equals(getBaseContext().getResources().getString(R.string.pref_language_device_key)) ? Locale.getDefault().getLanguage() : language;
         // Register the listener
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
@@ -192,6 +189,21 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
 
     /**
+     * This method will make the loading indicator visible and hide the movies View and error
+     * message.
+     * <p>
+     * Since it is okay to redundantly set the visibility of a View, we don't need to check whether
+     * each view is currently visible or invisible.
+     */
+    private void showLoading() {
+        /* First, make sure the error is invisible */
+        mErrorLayout.setVisibility(View.INVISIBLE);
+        /* Finally, show the loading indicator */
+        mLoadingIndicator.setVisibility(View.VISIBLE);
+    }
+
+
+    /**
      * This method will make the View for the movies data visible and
      * hide the error message.
      * <p>
@@ -199,7 +211,9 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
      * need to check whether each view is currently visible or invisible.
      */
     private void showMoviesDataView() {
-        /* First, make sure the error is invisible */
+        /* First, hide the loading indicator */
+        mLoadingIndicator.setVisibility(View.INVISIBLE);
+        /* Second, make sure the error is invisible */
         mErrorLayout.setVisibility(View.INVISIBLE);
         // Show mRecyclerView, not mMovieImageView
         mRecyclerView.setVisibility(View.VISIBLE);
@@ -215,9 +229,9 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
      * @param errorMessage the error message to show
      */
     private void showErrorMessage(String errorMessage) {
-        // Hide mRecyclerView, not mMovieImageView
         /* First, hide the currently visible data */
         mRecyclerView.setVisibility(View.INVISIBLE);
+        mLoadingIndicator.setVisibility(View.INVISIBLE);
         /* Then, show the error */
         mErrorMessageTv.setText(errorMessage);
         mErrorLayout.setVisibility(View.VISIBLE);
@@ -226,15 +240,12 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     private final LoaderManager.LoaderCallbacks<List<Movie>> moviesLoaderListener = new LoaderManager.LoaderCallbacks<List<Movie>>() {
         @Override
         public Loader<List<Movie>> onCreateLoader(int id, Bundle args) {
-
-            mLoadingIndicator.setVisibility(View.VISIBLE);
-
+            showLoading();
             return new MyAsyncTaskLoader(getBaseContext());
         }
 
         @Override
         public void onLoadFinished(Loader<List<Movie>> loader, List<Movie> moviesList) {
-            mLoadingIndicator.setVisibility(View.INVISIBLE);
             if (moviesList != null) {
                 showMoviesDataView();
                 // Set the movies List to Adapter
@@ -247,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         @Override
         public void onLoaderReset(Loader<List<Movie>> loader) {
-
+            mMovieAdapter.setMoviesList(null);
         }
     };
 
@@ -255,14 +266,12 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             = new LoaderManager.LoaderCallbacks<Cursor>() {
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-            mLoadingIndicator.setVisibility(View.VISIBLE);
-
+            showLoading();
             return new MyFavoritesAsyncTaskLoader(getBaseContext());
         }
 
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-            mLoadingIndicator.setVisibility(View.INVISIBLE);
 
             Log.d(TAG, "onLoadFinished Favorites: " + data.getCount());
 
@@ -315,8 +324,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         // Set preference values just changed
         if (key.equals(getString(R.string.pref_language_key))) {
             String language = sharedPreferences.getString(key, getResources().getString(R.string.pref_language_english_key));
-            mLanguage = getLanguageFromPref(language);
-
+            mLanguage = language.equals(getBaseContext().getResources().getString(R.string.pref_language_device_key)) ? Locale.getDefault().getLanguage() : language;
         }
 
 
@@ -343,10 +351,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         @Override
         public List<Movie> loadInBackground() {
 
-            String orderType = mMoviesType;
-            String language = mLanguage;
-
-            URL moviesRequestUrl = NetworkUtils.buildUrlWithSortingType(orderType, language);
+            URL moviesRequestUrl = NetworkUtils.buildUrlWithSortingType(mMoviesType, mLanguage);
 
             try {
                 String jsonMoviesResponse = NetworkUtils
@@ -572,14 +577,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         return super.onOptionsItemSelected(item);
 
-    }
-
-    private static String getLanguageFromPref(String language) {
-        if (language.equals(PREF_LANGUAGE_DEVICE_KEY)) {
-            language = Locale.getDefault().getLanguage();
-        }
-        Log.d(TAG, "language: " + language);
-        return language;
     }
 
 

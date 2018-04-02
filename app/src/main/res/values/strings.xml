@@ -51,9 +51,9 @@
     <!-- Language Settings -->
 
     <string name="pref_title_language">Data Source Language</string>
-    <string-array name="pref_language_list_titles">
-        <item>@string/pref_language_english_title</item>
-        <item>@string/pref_language_device_title</item>
+    <string-array name="pref_language_list_labels">
+        <item>@string/pref_language_english_label</item>
+        <item>@string/pref_language_device_label</item>
     </string-array>
     <string-array name="pref_language_list_values">
         <item>@string/pref_language_english_key</item>
@@ -67,9 +67,9 @@
     <!-- Video Type Settings -->
 
     <string name="pref_title_video_type">Video Type</string>
-    <string-array name="pref_video_type_list_titles">
-        <item>@string/pref_video_type_trailer_title</item>
-        <item>@string/pref_video_type_all_title</item>
+    <string-array name="pref_video_type_list_labels">
+        <item>@string/pref_video_type_trailer_label</item>
+        <item>@string/pref_video_type_all_label</item>
     </string-array>
     <string-array name="pref_video_type_list_values">
         <item>@string/pref_video_type_trailer_key</item>
@@ -79,11 +79,10 @@
     <string name="pref_video_type_trailer_key" translatable="false">trailer</string>
     <string name="pref_video_type_all_key" translatable="false">all</string>
     <string name="pref_video_type_key" translatable="false">video-type</string>
-    <string name="pref_video_type_trailer_title">Trailer</string>
-    <string name="pref_video_type_all_title">All</string>
-    <string name="pref_language_english_title">English</string>
-    <string name="pref_language_device_title">Current Device Language</string>
-
+    <string name="pref_video_type_trailer_label">Trailer</string>
+    <string name="pref_video_type_all_label">All</string>
+    <string name="pref_language_english_label">English</string>
+    <string name="pref_language_device_label">Current Device Language</string>
 
 
 </resources>
