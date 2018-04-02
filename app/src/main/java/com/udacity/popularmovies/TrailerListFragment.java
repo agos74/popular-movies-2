@@ -99,9 +99,16 @@ public class TrailerListFragment extends Fragment implements LoaderManager.Loade
         }
         Log.d(TAG, "OnLoadFinished: videos=" + (videoList == null ? 0 : videoList.size()));
 
-        //update Trailers title with number
+        // Update Trailers title with number
         Integer numTrailers = videoList == null ? 0 : videoList.size();
         ((DetailActivity) getActivity()).setTrailersTitleText(numTrailers.toString());
+
+        // Set first trailer key for share
+        String firstTrailerKey = null;
+        if (numTrailers > 0) {
+             firstTrailerKey = videoList.get(0).getKey();
+        }
+        ((DetailActivity) getActivity()).setFirstTrailerKey(firstTrailerKey);
 
     }
 

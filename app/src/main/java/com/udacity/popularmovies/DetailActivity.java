@@ -13,6 +13,8 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -30,10 +32,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+
 public class DetailActivity extends AppCompatActivity {
+
     private static final String TAG = DetailActivity.class.getSimpleName();
+    private static final String NOT_ASSIGNED = "NOT_ASSIGNED";
 
     private Movie movie;
+    private String mFirstTrailerKey = NOT_ASSIGNED;
 
     //ButterKnife Binding
     @BindView(R.id.toolbar)
@@ -60,6 +66,7 @@ public class DetailActivity extends AppCompatActivity {
     TextView mTrailersTitleTv;
     @BindView(R.id.favorite_fab)
     FloatingActionButton mFavoriteFab;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,9 +167,7 @@ public class DetailActivity extends AppCompatActivity {
         mRatingTv.setText(rating);
         mPlotSynopsisTv.setText(movie.getPlotSynopsis());
 
-        boolean isFavorite = isFavorite(movie.getId());
-
-        if (isFavorite) {
+        if (isFavorite(movie.getId())) {
             // Set star full icon
             mFavoriteFab.setImageResource(R.drawable.ic_star_24px);
         }
@@ -172,19 +177,6 @@ public class DetailActivity extends AppCompatActivity {
     private void closeOnError() {
         finish();
         Toast.makeText(this, R.string.detail_error_message, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        // When the home button is pressed, take the user back to the Main Activity
-        switch (id) {
-            case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     /**
@@ -209,7 +201,7 @@ public class DetailActivity extends AppCompatActivity {
             int movieDeleted = getContentResolver().delete(uri, null, null);
 
             if (movieDeleted > 0) {
-                Toast.makeText(getBaseContext(), "Movie removed from favorites", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), R.string.favorite_delete_message, Toast.LENGTH_SHORT).show();
             }
 
             // Set star outline icon
@@ -233,7 +225,7 @@ public class DetailActivity extends AppCompatActivity {
             Uri uriAdded = getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI, contentValues);
 
             if (uriAdded != null) {
-                Toast.makeText(getBaseContext(), "Movie added to favorites", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), R.string.favorite_add_message, Toast.LENGTH_SHORT).show();
             }
 
             // Set star full icon
@@ -267,4 +259,69 @@ public class DetailActivity extends AppCompatActivity {
 
         return isFavorite;
     }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        Log.d(TAG, "onCreateOptionsMenu: " + mFirstTrailerKey);
+
+        super.onCreateOptionsMenu(menu);
+
+        getMenuInflater().inflate(R.menu.detail, menu);
+
+        return false;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            // When the home button is pressed, take the user back to the Main Activity
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+            case R.id.action_share:
+                if (mFirstTrailerKey != null) {
+                    Intent shareIntent = createShareMovieIntent(mFirstTrailerKey);
+                    shareIntent = Intent.createChooser(shareIntent, getString(R.string.share_trailer_using_message));
+                    startActivity(shareIntent);
+                    return true;
+                }
+                Toast.makeText(this, getString(R.string.share_no_trailer_message), Toast.LENGTH_LONG).show();
+                return false;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**
+     * Set mFirstTrailerKey for use in action share.
+     *
+     * @param firstTrailerKey key for first movie trailer
+     */
+    public void setFirstTrailerKey(String firstTrailerKey) {
+        Log.d(TAG, "setFirstTrailerKey: " + firstTrailerKey);
+        mFirstTrailerKey = firstTrailerKey;
+    }
+
+    /**
+     * Uses the ShareCompat Intent builder to create our Trailer intent for sharing.  All we need
+     * to do is set the type, text and the NEW_DOCUMENT flag so it treats our share as a new task.
+     *
+     * @param firstTrailerKey key for first movie trailer
+     * @return the Intent to use to share our movie trailer
+     */
+    private Intent createShareMovieIntent(String firstTrailerKey) {
+
+        String shareLink = "http://www.youtube.com/watch?v=" + firstTrailerKey;
+
+        Intent shareIntent = new Intent(Intent.ACTION_SEND)
+                .setType("text/plain")
+                .setFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT)
+                .putExtra(Intent.EXTRA_TEXT, shareLink);
+        return shareIntent;
+    }
+
 }

@@ -46,6 +46,15 @@
     <string name="highest_rated_activity_title">Highest Rated Movies</string>
     <string name="my_favorites_activity_title">My Favorites Movies</string>
 
+    <string name="favorite_add_message">Movie added to favorites</string>
+    <string name="favorite_delete_message">Movie removed from favorites</string>
+
+    <string name="action_share">Share</string>
+
+    <string name="share_no_trailer_message">No trailer to share</string>
+    <string name="share_trailer_using_message">Share trailer using</string>
+
+
     <!-- Strings related to Settings -->
 
     <!-- Language Settings -->
