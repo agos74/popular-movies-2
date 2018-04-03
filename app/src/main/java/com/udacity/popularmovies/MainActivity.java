@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             }
         }
 
-        // Stetho integration, to view dataabase in chrome inspect.
+        // Stetho integration, to view database in chrome inspect.
         Stetho.initialize(
                 Stetho.newInitializerBuilder(this)
                         .enableDumpapp(
@@ -124,9 +124,12 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         setupSharedPreferences();
 
         if (NetworkUtils.isConnected(getBaseContext())) {
-            // Initialize the AsyncTaskLoaders
-            getSupportLoaderManager().initLoader(MOVIES_LOADER_ID, null, moviesLoaderListener);
-            getSupportLoaderManager().initLoader(FAVORITES_LOADER_ID, null, favoritesLoaderListener);
+            // Initialize the AsyncTaskLoader
+            if (mMoviesType.equals(FAVORITES_KEY)) {
+                getSupportLoaderManager().initLoader(FAVORITES_LOADER_ID, null, favoritesLoaderListener);
+            } else {
+                getSupportLoaderManager().initLoader(MOVIES_LOADER_ID, null, moviesLoaderListener);
+            }
         } else {
             showErrorMessage(getBaseContext().getResources().getString(R.string.network_error_message));
         }
@@ -187,7 +190,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     }
 
     /**
-     * This method will make the loading indicator visible.
+     * This method will make the loading indicator visible and
+     * hide the movies data.
      * <p>
      * Since it is okay to redundantly set the visibility of a View, we don't need to check whether
      * each view is currently visible or invisible.
@@ -195,6 +199,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     private void showLoading() {
         /* Show the loading indicator */
         mLoadingIndicator.setVisibility(View.VISIBLE);
+        // Hide mRecyclerView
+        mRecyclerView.setVisibility(View.INVISIBLE);
     }
 
 
@@ -213,7 +219,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     }
 
     /**
-     * This method will make the error message visible.
+     * This method will make the error message visible while
+     * hide the loading indicator.
      * <p>
      * Since it is okay to redundantly set the visibility of a View, we don't
      * need to check whether each view is currently visible or invisible.
@@ -287,7 +294,11 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             Log.d(TAG, "onStart: preferences were updated");
 
             if (NetworkUtils.isConnected(getBaseContext())) {
-                getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, null, moviesLoaderListener);
+                if (mMoviesType.equals(FAVORITES_KEY)) {
+                    getSupportLoaderManager().restartLoader(FAVORITES_LOADER_ID, null, favoritesLoaderListener);
+                } else {
+                    getSupportLoaderManager().restartLoader(MOVIES_LOADER_ID, null, moviesLoaderListener);
+                }
             } else {
                 showErrorMessage(getBaseContext().getResources().getString(R.string.network_error_message));
             }
@@ -477,7 +488,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         super.onSaveInstanceState(outState);
         //Put the order type in the outState bundle
         outState.putString(MOVIES_TYPE_TEXT_KEY, mMoviesType);
-
     }
 
     @Override
@@ -576,7 +586,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 MainActivity.this).create();
 
         // Setting Dialog Title
-        alertDialog.setTitle("Alert Dialog");
+        alertDialog.setTitle(getString(R.string.alert_dialog_title));
+
+        // Make a choice mandatory
+        alertDialog.setCancelable(false);
 
         // Setting Dialog Message
         alertDialog.setMessage(errorMessage);

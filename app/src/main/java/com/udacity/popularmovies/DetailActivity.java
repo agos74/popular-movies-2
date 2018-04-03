@@ -43,7 +43,7 @@ public class DetailActivity extends AppCompatActivity {
     private Movie movie;
     private String mFirstTrailerKey;
     private boolean mFromFavorites;
-    private static boolean FAVORITE_HAVE_BEEN_REMOVED = false;
+    private static boolean FAVORITE_HAS_BEEN_REMOVED = false;
 
     //ButterKnife Binding
     @BindView(R.id.toolbar)
@@ -223,7 +223,7 @@ public class DetailActivity extends AppCompatActivity {
             // Set star outline icon
             mFavoriteFab.setImageResource(R.drawable.ic_star_outline_24px);
 
-            FAVORITE_HAVE_BEEN_REMOVED = true;
+            FAVORITE_HAS_BEEN_REMOVED = true;
 
         } else { // Add favorite
 
@@ -249,7 +249,7 @@ public class DetailActivity extends AppCompatActivity {
             // Set star full icon
             mFavoriteFab.setImageResource(R.drawable.ic_star_24px);
 
-            FAVORITE_HAVE_BEEN_REMOVED = true;
+            FAVORITE_HAS_BEEN_REMOVED = false;
 
         }
 
@@ -301,7 +301,7 @@ public class DetailActivity extends AppCompatActivity {
         switch (id) {
             // When the home button is pressed, take the user back to the Main Activity
             case android.R.id.home:
-                boolean flagRefresh = FAVORITE_HAVE_BEEN_REMOVED && mFromFavorites;
+                boolean flagRefresh = FAVORITE_HAS_BEEN_REMOVED && mFromFavorites;
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("flag_refresh", flagRefresh);
                 setResult(Activity.RESULT_OK, returnIntent);

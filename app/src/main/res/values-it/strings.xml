@@ -38,5 +38,6 @@
     <string name="share_no_trailer_message">Nessun trailer da condividere</string>
     <string name="share_trailer_using_message">Condividi il trailer usando</string>
     <string name="open_favorite_button_title">Vai ai preferiti</string>
+    <string name="alert_dialog_title">Attenzione!</string>
 
 </resources>

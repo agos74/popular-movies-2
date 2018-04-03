@@ -93,6 +93,7 @@
     <string name="pref_language_english_label">English</string>
     <string name="pref_language_device_label">Current Device Language</string>
     <string name="open_favorite_button_title">Go to favorites</string>
+    <string name="alert_dialog_title">Warning!</string>
 
 
 </resources>
