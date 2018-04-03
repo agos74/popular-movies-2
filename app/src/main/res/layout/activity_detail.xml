@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
+            app:contentScrim="@color/colorPrimary"
             app:expandedTitleGravity="bottom|center_horizontal"
             app:expandedTitleMarginBottom="@dimen/margin_extra_large"
             app:expandedTitleMarginEnd="@dimen/margin_extra_large"
@@ -49,7 +49,7 @@
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="?android:attr/actionBarSize"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
@@ -139,11 +139,36 @@
                             style="@style/DetailLabelStyle"
                             android:text="@string/detail_rating_label" />
 
-                        <TextView
-                            android:id="@+id/rating_tv"
-                            style="@style/DetailTextStyle"
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_below="@id/rating_label"
-                            android:text="@string/activity_movie_rating_text" />
+                            android:orientation="horizontal">
+
+                            <RatingBar
+                                android:id="@+id/rating_bar"
+                                style="?android:ratingBarStyleIndicator"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="-3dp"
+                                android:layout_marginRight="-60dp"
+                                android:isIndicator="true"
+                                android:max="5"
+                                android:numStars="5"
+                                android:rating="4"
+                                android:scaleX=".6"
+                                android:scaleY=".6"
+                                android:stepSize="0.1"
+                                android:transformPivotX="0dp"
+                                android:transformPivotY="0dp"></RatingBar>
+
+                            <TextView
+                                android:id="@+id/rating_tv"
+                                style="@style/DetailTextStyle"
+                                android:text="@string/activity_movie_rating_text" />
+
+                        </LinearLayout>
+
                     </RelativeLayout>
 
                 </LinearLayout>

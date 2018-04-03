@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,6 +62,8 @@ public class DetailActivity extends AppCompatActivity {
     TextView mReleaseDateTv;
     @BindView(R.id.rating_tv)
     TextView mRatingTv;
+    @BindView(R.id.rating_bar)
+    RatingBar mRatingBar;
     @BindView(R.id.plot_synopsis_tv)
     TextView mPlotSynopsisTv;
     @BindView(R.id.reviews_title_tv)
@@ -168,8 +171,9 @@ public class DetailActivity extends AppCompatActivity {
 //        mTitleTv.setText(movie.getTitle());
         mOriginalTitleTv.setText(movie.getOriginalTitle());
         mReleaseDateTv.setText(DateUtils.getDateFormatted(movie.getReleaseDate()));
-        String rating = movie.getRating().concat("/10");
+        String rating = movie.getRating();
         mRatingTv.setText(rating);
+        mRatingBar.setRating(getRatingFloat(rating));
         mPlotSynopsisTv.setText(movie.getPlotSynopsis());
 
         if (isFavorite(movie.getId())) {
@@ -177,6 +181,13 @@ public class DetailActivity extends AppCompatActivity {
             mFavoriteFab.setImageResource(R.drawable.ic_star_24px);
         }
 
+    }
+
+    private float getRatingFloat(String rating) {
+        double ratingDouble = Float.valueOf(rating);
+        float ratingFloat = (float) ((ratingDouble * 5) / 10);
+        Log.d(TAG, "rating: " + String.valueOf(ratingFloat));
+        return ratingFloat;
     }
 
     private void closeOnError() {

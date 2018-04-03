@@ -32,7 +32,7 @@
     <!-- Movie details text -->
     <string name="activity_movie_title_text" translatable="false">Maze Runner: The Scorch Trials</string>
     <string name="activity_movie_release_date_text" translatable="false">2016–12–02</string>
-    <string name="activity_movie_rating_text" translatable="false">6.1/10</string>
+    <string name="activity_movie_rating_text" translatable="false">6.1</string>
     <string name="activity_movie_plot_synopsis_text" translatable="false">"After the events of Captain America: Civil War, King T'Challa returns home to the reclusive, technologically advanced African nation of Wakanda to serve as his country's new leader. However, T'Challa soon finds that he is challenged for the throne from factions within his own country. When two foes conspire to destroy Wakanda, the hero known as Black Panther must team up with C.I.A. agent Everett K. Ross and members of the Dora Milaje, Wakandan special forces, to prevent Wakanda from being dragged into a world war."</string>
     <string name="activity_movie_trailer_text" translatable="false">Official Trailer</string>
     <string name="activity_movie_review_author_text" translatable="false">Author</string>
