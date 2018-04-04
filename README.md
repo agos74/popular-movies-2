@@ -15,5 +15,6 @@ https://github.com/nuuneoi/AdjustableImageView
 
 Settings
 - Data Source Language: language key passed to get data using themoviedb.org API, English (default) or Current Device Language.
-- Video Type: video type to get trailers using themoviedb.org API, Only Trailer or All (Trailer, Teaser, Clip, etc.)
-For personal purpose i have translated strings only for italian language, default is english.  
+- Video Type: video type to get trailers using themoviedb.org API, Only Trailer or All (Trailer, Teaser, Clip, etc.).
+
+For personal purpose i have translated strings only for italian language, default is english.
